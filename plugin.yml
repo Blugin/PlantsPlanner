@@ -1,8 +1,8 @@
 ---
-name: Template
-main: blugin\template\Loader
+name: TiledPlants
+main: kim\present\tiledplants\Loader
 version: 0.1.0
 api: [ 4.0.0 ]
-author: AuthorName
-description: Template of Pocketmine-MP plugin
+author: PresentKim
+description: Manage plants as tiles!
 ...
