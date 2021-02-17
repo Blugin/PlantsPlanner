@@ -18,6 +18,7 @@ use pocketmine\math\Facing;
 trait StackablePlantsTrait{
     use PlantsTrait;
 
+    /** @inheritDoc */
     public function grow() : void{
         /** @var Block|IPlants $this */
         if(!$this->canGrow()){
@@ -35,6 +36,7 @@ trait StackablePlantsTrait{
         }
     }
 
+    /** @inheritDoc */
     public function canGrow() : bool{
         if($this->getSide(Facing::DOWN)->isSameType($this))
             return true;
@@ -60,11 +62,15 @@ trait StackablePlantsTrait{
         return !$canGrow;
     }
 
+    /** @see StackablePlantsData::getMaxHeight() */
     public function getMaxHeight() : int{
-        /** @see StackablePlantsData::getMaxHeight() */
         return $this->getPlantsData()->getMaxHeight();
     }
 
+    /**
+     * @override to register scheduling when near block changed.
+     * Since growth is handled at bottom, it searches for bottom and then adds that to the scheduling.
+     */
     public function onNearbyBlockChange() : void{
         /**
          * @noinspection PhpUndefinedClassInspection

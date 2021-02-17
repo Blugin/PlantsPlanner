@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace kim\present\plantsplaner\data;
 
+/**
+ * It used for Crops growing into different blocks, such as watermelon and pumpkin.
+ * It has a data for bear the fruit time.
+ */
 class BearablePlantsData extends PlantsData{
     protected float $bearSeconds;
 

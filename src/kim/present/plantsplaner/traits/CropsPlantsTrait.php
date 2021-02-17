@@ -15,6 +15,7 @@ use pocketmine\block\Crops;
 trait CropsPlantsTrait{
     use PlantsTrait;
 
+    /** @inheritDoc */
     public function grow() : void{
         /** @var Crops|IPlants $this */
         if(!$this->canGrow()){
@@ -24,6 +25,7 @@ trait CropsPlantsTrait{
         }
     }
 
+    /** @inheritDoc */
     public function canGrow() : bool{
         /** @var Crops|IPlants $this */
         return $this->age >= 7;
