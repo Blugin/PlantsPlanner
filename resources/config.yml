@@ -12,21 +12,26 @@ global:
 # Additional properties may exist depending on the type of plant.
 # The description of the same property is written only once.
 wheat:
-  # Seconds it takes to grow [float: seconds] (default: 300.0)
+  # Seconds it takes to grow [float: seconds] (default: 60.0)
   # It means grow to the next level. (not full-growth time)
-  grow-seconds: 300.0
+  grow-seconds: 60.0
 
 potato:
-  grow-seconds: 300.0
+  # Same as `wheat`
+  grow-seconds: 60.0
 
 carrot:
-  grow-seconds: 300.0
+  # Same as `wheat`
+  grow-seconds: 60.0
 
 beetroot:
-  grow-seconds: 300.0
+  # Same as `wheat`
+  grow-seconds: 60.0
 
 mellon_stem:
-  grow-seconds: 300.0
+  # Same as `wheat`
+  grow-seconds: 60.0
 
 pumpkin_stem:
-  grow-seconds: 300.0
+  # Same as `wheat`
+  grow-seconds: 60.0

@@ -6,7 +6,7 @@ namespace kim\present\tiledplants\data;
 class PlantData{
     private float $growSeconds;
 
-    public function __construct(float $growSeconds = 300.0){
+    public function __construct(float $growSeconds){
         $this->growSeconds = $growSeconds;
     }
 

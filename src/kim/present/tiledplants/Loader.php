@@ -56,11 +56,11 @@ final class Loader extends PluginBase{
     protected static function setup() : void{
         $config = self::getInstance();
         self::$updateDelay = (int) ($config->getConfigFloat("global.update-delay", 60) * 20);
-        self::_registryRegister("wheat", new PlantData($config->getConfigFloat("wheat.grow-seconds", 300)));
-        self::_registryRegister("potato", new PlantData($config->getConfigFloat("potato.grow-seconds", 300)));
-        self::_registryRegister("carrot", new PlantData($config->getConfigFloat("carrot.grow-seconds", 300)));
-        self::_registryRegister("beetroot", new PlantData($config->getConfigFloat("beetroot.grow-seconds", 300)));
-        self::_registryRegister("melon_stem", new PlantData($config->getConfigFloat("mellon_stem.grow-seconds", 300)));
-        self::_registryRegister("pumpkin_stem", new PlantData($config->getConfigFloat("pumpkin_stem.grow-seconds", 300)));
+        self::_registryRegister("wheat", new PlantData($config->getConfigFloat("wheat.grow-seconds", 60.0)));
+        self::_registryRegister("potato", new PlantData($config->getConfigFloat("potato.grow-seconds", 60.0)));
+        self::_registryRegister("carrot", new PlantData($config->getConfigFloat("carrot.grow-seconds", 60.0)));
+        self::_registryRegister("beetroot", new PlantData($config->getConfigFloat("beetroot.grow-seconds", 60.0)));
+        self::_registryRegister("melon_stem", new PlantData($config->getConfigFloat("mellon_stem.grow-seconds", 60.0)));
+        self::_registryRegister("pumpkin_stem", new PlantData($config->getConfigFloat("pumpkin_stem.grow-seconds", 60.0)));
     }
 }
