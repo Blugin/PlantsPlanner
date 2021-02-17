@@ -7,8 +7,6 @@ use kim\present\tiledplants\block\ITiledPlant;
 use kim\present\tiledplants\Loader;
 use kim\present\tiledplants\tile\Plants;
 use pocketmine\block\Block;
-use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
-use pocketmine\Server;
 
 /**
  * This trait provides a implementation for `ITiledPlant` to reduce boilerplate.
@@ -41,14 +39,6 @@ trait TiledPlantsTrait{
     }
 
     public function onRandomTick() : void{
-    }
-
-    public function onGrow() : void{
-        /** @var Block|ITiledPlant $this */
-        $pk = new SpawnParticleEffectPacket();
-        $pk->position = $this->pos;
-        $pk->particleName = "minecraft:crop_growth_emitter";
-        Server::getInstance()->broadcastPackets($this->pos->getWorld()->getViewersForPosition($this->pos), [$pk]);
     }
 
     public function getGrowSeconds() : float{

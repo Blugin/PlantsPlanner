@@ -9,7 +9,6 @@ use kim\present\tiledplants\Loader;
 use kim\present\tiledplants\tile\Plants;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\Stem;
-use pocketmine\event\block\BlockGrowEvent;
 use pocketmine\math\Facing;
 
 /**
@@ -26,12 +25,8 @@ trait TiledStemTrait{
             if($this->age < 7){
                 $block = clone $this;
                 ++$block->age;
-                $ev = new BlockGrowEvent($this, $block);
-                $ev->call();
-                if(!$ev->isCancelled()){
-                    $this->pos->getWorld()->setBlock($this->pos, $ev->getNewState());
-                    $this->onGrow();
-                }
+
+                Plants::growPlant($this, $block);
             }else{
                 $grow = $this->getPlant();
 
@@ -41,13 +36,7 @@ trait TiledStemTrait{
                     $side = $this->getSide($face);
                     $down = $side->getSide(Facing::DOWN);
                     if($side->canBeReplaced() && ($down->getId() === BlockLegacyIds::FARMLAND || $down->getId() === BlockLegacyIds::GRASS || $down->getId() === BlockLegacyIds::DIRT)){
-                        $ev = new BlockGrowEvent($side, $grow);
-                        $ev->call();
-                        if(!$ev->isCancelled()){
-                            $this->pos->getWorld()->setBlock($side->pos, $ev->getNewState());
-                            $this->onGrow();
-                            return;
-                        }
+                        Plants::growPlant($side, $grow);
                     }
                 }
             }

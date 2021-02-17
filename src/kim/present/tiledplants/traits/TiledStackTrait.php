@@ -9,10 +9,7 @@ use kim\present\tiledplants\Loader;
 use kim\present\tiledplants\tile\Plants;
 use pocketmine\block\Block;
 use pocketmine\block\BlockLegacyIds;
-use pocketmine\event\block\BlockGrowEvent;
 use pocketmine\math\Facing;
-use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
-use pocketmine\Server;
 
 /**
  * This trait provides a implementation for stackable `ITiledPlant` to reduce boilerplate.
@@ -33,13 +30,7 @@ trait TiledStackTrait{
 
                 $block = $world->getBlock($vec);
                 if($block->getId() === BlockLegacyIds::AIR){
-                    $ev = new BlockGrowEvent($block, clone $this);
-                    $ev->call();
-                    if(!$ev->isCancelled()){
-                        $this->pos->getWorld()->setBlock($block->pos, $ev->getNewState());
-                        $this->onGrow();
-                        return;
-                    }
+                    Plants::growPlant($block, clone $this);
                 }
             }
         }
@@ -68,19 +59,6 @@ trait TiledStackTrait{
             }
         }
         return !$canGrow;
-    }
-
-    public function onGrow() : void{
-        $world = $this->pos->getWorld();
-        $top = $this;
-        while(($up = $top->getSide(Facing::UP))->isSameType($this)){
-            $top = $up;
-        }
-
-        $pk = new SpawnParticleEffectPacket();
-        $pk->position = $top->getPos();
-        $pk->particleName = "minecraft:crop_growth_emitter";
-        Server::getInstance()->broadcastPackets($world->getViewersForPosition($top->getPos()), [$pk]);
     }
 
     public function getMaxHeight() : int{
