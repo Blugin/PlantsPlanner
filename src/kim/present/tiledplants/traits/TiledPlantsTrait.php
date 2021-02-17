@@ -44,7 +44,7 @@ trait TiledPlantsTrait{
         $pk = new SpawnParticleEffectPacket();
         $pk->position = $this->pos;
         $pk->particleName = "minecraft:crop_growth_emitter";
-        Server::getInstance()->broadcastPackets($this->pos->getWorld()->getViewersForPosition($this->pos->add(0.5, 0.5, 0.5)), [$pk]);
+        Server::getInstance()->broadcastPackets($this->pos->getWorld()->getViewersForPosition($this->pos), [$pk]);
     }
 
     public function getGrowSeconds() : float{
