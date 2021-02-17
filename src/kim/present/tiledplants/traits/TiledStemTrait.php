@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace kim\present\tiledplants\traits;
 
 use kim\present\tiledplants\block\ITiledPlant;
+use kim\present\tiledplants\Loader;
 use kim\present\tiledplants\tile\Plants;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\Stem;
@@ -59,7 +60,7 @@ trait TiledStemTrait{
             if($plantsTile instanceof Plants){
                 $plantsTile->setLastTime(microtime(true));
             }
-            $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Plants::$updateDelay);
+            $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Loader::$updateDelay);
         }
     }
 

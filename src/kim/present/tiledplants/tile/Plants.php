@@ -4,14 +4,13 @@ declare(strict_types=1);
 namespace kim\present\tiledplants\tile;
 
 use kim\present\tiledplants\block\ITiledPlant;
+use kim\present\tiledplants\Loader;
 use pocketmine\block\tile\Tile;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\world\World;
 
 class Plants extends Tile{
-    public static int $updateDelay = 60 * 20;
-
     public const TAG_LAST_TIME = "LastTime";
 
     protected float $lastTime;
@@ -20,7 +19,7 @@ class Plants extends Tile{
         parent::__construct($world, $pos);
 
         $this->lastTime = microtime(true);
-        $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, self::$updateDelay);
+        $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Loader::$updateDelay);
     }
 
     public function readSaveData(CompoundTag $nbt) : void{
@@ -43,7 +42,7 @@ class Plants extends Tile{
 
         $this->timings->startTiming();
         $diffSeconds = microtime(true) - $this->lastTime;
-        $growSeconds = $block->getPlantData()->getGrowSeconds();
+        $growSeconds = $block->getGrowSeconds();
         while(!$block->isRipe() && $diffSeconds > $growSeconds){
             $diffSeconds -= $growSeconds;
             $block->grow();

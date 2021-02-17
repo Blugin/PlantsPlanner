@@ -2,16 +2,31 @@
 # Some of these settings are safe, others can break your server if modified incorrectly
 # New settings/defaults won't appear automatically in this file when upgrading.
 
-# Plants update delay [flot: seconds] (default: 30.0)
-# It is recommended to be as high as possible. Lower = more CPU, check more often
-delay: 30.0
+# Settings for global.
+global:
+  # Plants update delay [flot: seconds] (default: 30.0)
+  # It is recommended to be as high as possible. Lower = more CPU, check more often
+  update-delay: 30.0
 
-# Grow times of each plant [float: seconds] (default: 300.0)
-# It means grow to the next level. (not full-growth)
-growtimes:
-  wheat: 300.0
-  potato: 300.0
-  carrot: 300.0
-  beetroot: 300.0
-  mellon_stem: 300.0
-  pumpkin_stem: 300.0
+# Settings for plants.
+# Additional properties may exist depending on the type of plant.
+# The description of the same property is written only once.
+wheat:
+  # Seconds it takes to grow [float: seconds] (default: 300.0)
+  # It means grow to the next level. (not full-growth time)
+  grow-seconds: 300.0
+
+potato:
+  grow-seconds: 300.0
+
+carrot:
+  grow-seconds: 300.0
+
+beetroot:
+  grow-seconds: 300.0
+
+mellon_stem:
+  grow-seconds: 300.0
+
+pumpkin_stem:
+  grow-seconds: 300.0

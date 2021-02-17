@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace kim\present\tiledplants\block;
 
 use kim\present\tiledplants\data\PlantData;
+use kim\present\tiledplants\Loader;
 use kim\present\tiledplants\traits\TiledStemTrait;
 use pocketmine\block\MelonStem;
 
@@ -11,6 +12,6 @@ final class TiledPumpkinStem extends MelonStem implements ITiledPlant{
     use TiledStemTrait;
 
     public function getPlantData() : PlantData{
-        return PlantData::PUMPKIN_STEM();
+        return Loader::PUMPKIN_STEM();
     }
 }

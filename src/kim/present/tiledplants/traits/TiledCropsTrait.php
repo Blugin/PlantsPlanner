@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace kim\present\tiledplants\traits;
 
 use kim\present\tiledplants\block\ITiledPlant;
-use kim\present\tiledplants\tile\Plants;
 use pocketmine\block\Crops;
 use pocketmine\event\block\BlockGrowEvent;
 

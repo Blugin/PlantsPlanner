@@ -17,17 +17,24 @@ use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\tile\TileFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\plugin\PluginBase;
+use pocketmine\utils\RegistryTrait;
+use pocketmine\utils\SingletonTrait;
 
+/**
+ * @method static PlantData WHEAT()
+ * @method static PlantData POTATO()
+ * @method static PlantData CARROT()
+ * @method static PlantData BEETROOT()
+ * @method static PlantData MELON_STEM()
+ * @method static PlantData PUMPKIN_STEM()
+ */
 final class Loader extends PluginBase{
+    use SingletonTrait, RegistryTrait;
+
+    public static int $updateDelay = 60 * 20;
+
     protected function onLoad() : void{
-        //Load config
-        Plants::$updateDelay = (int) ($this->getConfigFloat("delay", 60) * 20);
-        PlantData::register("wheat", $this->getConfigFloat("growtimes.wheat", 300));
-        PlantData::register("potato", $this->getConfigFloat("growtimes.potato", 300));
-        PlantData::register("carrot", $this->getConfigFloat("growtimes.carrot", 300));
-        PlantData::register("beetroot", $this->getConfigFloat("growtimes.beetroot", 300));
-        PlantData::register("melon_stem", $this->getConfigFloat("growtimes.mellon_stem", 300));
-        PlantData::register("pumpkin_stem", $this->getConfigFloat("growtimes.pumpkin_stem", 300));
+        self::$instance = $this;
 
         //Register Plants tile
         TileFactory::getInstance()->register(Plants::class, ["Plants", "presentkim:plants"]);
@@ -44,5 +51,16 @@ final class Loader extends PluginBase{
 
     private function getConfigFloat(string $k, float $default) : float{
         return (float) $this->getConfig()->getNested($k, $default);
+    }
+
+    protected static function setup() : void{
+        $config = self::getInstance();
+        self::$updateDelay = (int) ($config->getConfigFloat("global.update-delay", 60) * 20);
+        self::_registryRegister("wheat", new PlantData($config->getConfigFloat("wheat.grow-seconds", 300)));
+        self::_registryRegister("potato", new PlantData($config->getConfigFloat("potato.grow-seconds", 300)));
+        self::_registryRegister("carrot", new PlantData($config->getConfigFloat("carrot.grow-seconds", 300)));
+        self::_registryRegister("beetroot", new PlantData($config->getConfigFloat("beetroot.grow-seconds", 300)));
+        self::_registryRegister("melon_stem", new PlantData($config->getConfigFloat("mellon_stem.grow-seconds", 300)));
+        self::_registryRegister("pumpkin_stem", new PlantData($config->getConfigFloat("pumpkin_stem.grow-seconds", 300)));
     }
 }

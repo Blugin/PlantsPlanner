@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace kim\present\tiledplants\traits;
 
 use kim\present\tiledplants\block\ITiledPlant;
+use kim\present\tiledplants\Loader;
 use kim\present\tiledplants\tile\Plants;
 use pocketmine\block\Block;
 use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
@@ -19,7 +20,7 @@ trait TiledPlantsTrait{
         /** @var Block|ITiledPlant $this */
         $plantsTile = $this->pos->getWorld()->getTile($this->pos);
         if($plantsTile instanceof Plants and $plantsTile->onUpdate()){
-            $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Plants::$updateDelay);
+            $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Loader::$updateDelay);
         }
     }
 
@@ -44,5 +45,10 @@ trait TiledPlantsTrait{
         $pk->position = $this->pos;
         $pk->particleName = "minecraft:crop_growth_emitter";
         Server::getInstance()->broadcastPackets($this->pos->getWorld()->getViewersForPosition($this->pos->add(0.5, 0.5, 0.5)), [$pk]);
+    }
+
+    public function getGrowSeconds() : float{
+        /** @var Block|ITiledPlant $this */
+        return $this->getPlantData()->getGrowSeconds();
     }
 }

@@ -13,4 +13,6 @@ interface ITiledPlant{
     public function onGrow() : void;
 
     public function getPlantData() : PlantData;
+
+    public function getGrowSeconds() : float;
 }
