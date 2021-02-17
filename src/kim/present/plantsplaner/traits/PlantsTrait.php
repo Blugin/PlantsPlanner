@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace kim\present\plantsplaner\traits;
 
 use kim\present\plantsplaner\block\IPlants;
-use kim\present\plantsplaner\Loader;
 use kim\present\plantsplaner\tile\Plants;
 use pocketmine\block\Block;
 
@@ -19,7 +18,7 @@ trait PlantsTrait{
         $plantsTile = $this->pos->getWorld()->getTile($this->pos);
         if($plantsTile instanceof Plants){
             if($plantsTile->onUpdate()){
-                $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Loader::$updateDelay);
+                $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Plants::$updateDelay);
             }elseif($this->getPlantsData()->isTemporary()){
                 $plantsTile->close();
             }

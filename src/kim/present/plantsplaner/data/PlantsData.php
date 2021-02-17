@@ -17,4 +17,8 @@ class PlantsData{
     public function isTemporary() : bool{
         return true;
     }
+
+    public static function fromArray(array $array) : PlantsData{
+        return new PlantsData((float) ($array["grow-seconds"] ?? 60.0));
+    }
 }

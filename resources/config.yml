@@ -43,12 +43,12 @@ pumpkin_stem:
 
 cactus:
   # Same as `wheat`
-  grow-seconds: 30.0
+  grow-seconds: 60.0
 
   # Max grow height [int: block] (default: 3)
   max-height: 3
 
 sugarcane:
   # Same as `cactus`
-  grow-seconds: 30.0
+  grow-seconds: 60.0
   max-height: 3

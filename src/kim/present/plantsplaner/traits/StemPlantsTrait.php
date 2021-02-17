@@ -51,7 +51,7 @@ trait StemPlantsTrait{
             if($plantsTile instanceof Plants){
                 $plantsTile->setLastTime(microtime(true));
             }
-            $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Loader::$updateDelay);
+            $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Plants::$updateDelay);
         }
     }
 

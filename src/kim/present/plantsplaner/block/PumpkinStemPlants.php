@@ -12,6 +12,6 @@ final class PumpkinStemPlants extends MelonStem implements IPlants{
     use StemPlantsTrait;
 
     public function getPlantsData() : PlantsData{
-        return Loader::PUMPKIN_STEM();
+        return DefaultPlants::PUMPKIN_STEM();
     }
 }

@@ -5,7 +5,6 @@ namespace kim\present\plantsplaner\traits;
 
 use kim\present\plantsplaner\block\IPlants;
 use kim\present\plantsplaner\data\StackablePlantsData;
-use kim\present\plantsplaner\Loader;
 use kim\present\plantsplaner\tile\Plants;
 use pocketmine\block\Block;
 use pocketmine\block\BlockLegacyIds;
@@ -83,6 +82,6 @@ trait StackablePlantsTrait{
         if($plantsTile instanceof Plants){
             $plantsTile->setLastTime(microtime(true));
         }
-        $world->scheduleDelayedBlockUpdate($floor->getPos(), Loader::$updateDelay);
+        $world->scheduleDelayedBlockUpdate($floor->getPos(), Plants::$updateDelay);
     }
 }

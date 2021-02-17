@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace kim\present\plantsplaner\tile;
 
 use kim\present\plantsplaner\block\IPlants;
-use kim\present\plantsplaner\Loader;
 use pocketmine\block\Block;
 use pocketmine\block\tile\Tile;
 use pocketmine\event\block\BlockGrowEvent;
@@ -17,13 +16,15 @@ use pocketmine\world\World;
 class Plants extends Tile{
     public const TAG_LAST_TIME = "LastTime";
 
+    public static int $updateDelay = 60 * 20;
+
     protected float $lastTime;
 
     public function __construct(World $world, Vector3 $pos){
         parent::__construct($world, $pos);
 
         $this->lastTime = microtime(true);
-        $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Loader::$updateDelay);
+        $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Plants::$updateDelay);
     }
 
     public function readSaveData(CompoundTag $nbt) : void{
