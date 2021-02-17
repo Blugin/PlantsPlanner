@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace kim\present\tiledplants\traits;
 
 use kim\present\tiledplants\block\ITiledPlant;
+use kim\present\tiledplants\data\BearablePlantData;
 use kim\present\tiledplants\Loader;
 use kim\present\tiledplants\tile\Plants;
 use pocketmine\block\BlockLegacyIds;
@@ -77,5 +78,11 @@ trait TiledStemTrait{
             }
             return false;
         }
+    }
+
+    public function getGrowSeconds() : float{
+        /** @var BearablePlantData $plantData */
+        $plantData = $this->getPlantData();
+        return $this->age < 7 ? $plantData->getGrowSeconds() : $plantData->getBearSeconds();
     }
 }

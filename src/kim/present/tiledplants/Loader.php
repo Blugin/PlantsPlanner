@@ -9,6 +9,7 @@ use kim\present\tiledplants\block\TiledMelonStem;
 use kim\present\tiledplants\block\TiledPotato;
 use kim\present\tiledplants\block\TiledPumpkinStem;
 use kim\present\tiledplants\block\TiledWheat;
+use kim\present\tiledplants\data\BearablePlantData;
 use kim\present\tiledplants\data\PlantData;
 use kim\present\tiledplants\tile\Plants;
 use pocketmine\block\BlockFactory;
@@ -60,7 +61,13 @@ final class Loader extends PluginBase{
         self::_registryRegister("potato", new PlantData($config->getConfigFloat("potato.grow-seconds", 60.0)));
         self::_registryRegister("carrot", new PlantData($config->getConfigFloat("carrot.grow-seconds", 60.0)));
         self::_registryRegister("beetroot", new PlantData($config->getConfigFloat("beetroot.grow-seconds", 60.0)));
-        self::_registryRegister("melon_stem", new PlantData($config->getConfigFloat("mellon_stem.grow-seconds", 60.0)));
-        self::_registryRegister("pumpkin_stem", new PlantData($config->getConfigFloat("pumpkin_stem.grow-seconds", 60.0)));
+        self::_registryRegister("melon_stem", new BearablePlantData(
+            $config->getConfigFloat("mellon_stem.grow-seconds", 30.0),
+            $config->getConfigFloat("mellon_stem.bear-seconds", 300.0)
+        ));
+        self::_registryRegister("pumpkin_stem", new BearablePlantData(
+            $config->getConfigFloat("pumpkin_stem.grow-seconds", 30.0),
+            $config->getConfigFloat("pumpkin_stem.bear-seconds", 300.0)
+        ));
     }
 }
