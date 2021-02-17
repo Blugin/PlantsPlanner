@@ -51,7 +51,7 @@ class Plants extends Tile{
             if(!$block instanceof ITiledPlant)
                 return false;
         }
-        $this->lastTime -= $diffSeconds;
+        $this->lastTime = microtime(true) - $diffSeconds;
         $this->timings->stopTiming();
 
         return !$block->isRipe();
