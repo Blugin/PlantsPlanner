@@ -1,8 +1,8 @@
 ---
-name: TiledPlants
-main: kim\present\tiledplants\Loader
+name: PlantsPlanner
+main: kim\present\plantsplaner\Loader
 version: 0.1.0
 api: [ 4.0.0 ]
 author: PresentKim
-description: Manage plants as tiles!
+description: Manage plants with precise time planning!
 ...

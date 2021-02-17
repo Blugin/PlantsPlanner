@@ -1,0 +1,54 @@
+# Main configuration file for PlantsPlanner
+# Some of these settings are safe, others can break your server if modified incorrectly
+# New settings/defaults won't appear automatically in this file when upgrading.
+
+# Settings for global.
+global:
+  # Plants update delay [flot: seconds] (default: 30.0)
+  # It is recommended to be as high as possible. Lower = more CPU, check more often
+  update-delay: 30.0
+
+# Settings for plants.
+# Additional properties may exist depending on the type of plants.
+# The description of the same property is written only once.
+wheat:
+  # Seconds it takes to grow [float: seconds] (default: 60.0)
+  # It means grow to the next level. (not full-growth time)
+  grow-seconds: 60.0
+
+potato:
+  # Same as `wheat`
+  grow-seconds: 60.0
+
+carrot:
+  # Same as `wheat`
+  grow-seconds: 60.0
+
+beetroot:
+  # Same as `wheat`
+  grow-seconds: 60.0
+
+mellon_stem:
+  # Seconds it takes to grow stem [float: seconds] (default: 30.0)
+  # It means grow to the next level. (not full-growth time)
+  grow-seconds: 30.0
+
+  # Seconds it takes to bear fruit [float: seconds] (default: 300.0)
+  bear-seconds: 300.0
+
+pumpkin_stem:
+  # Same as `mellon_stem`
+  grow-seconds: 30.0
+  bear-seconds: 300.0
+
+cactus:
+  # Same as `wheat`
+  grow-seconds: 60.0
+
+  # Max grow height [int: block] (default: 3)
+  max-height: 3
+
+sugarcane:
+  # Same as `cactus`
+  grow-seconds: 60.0
+  max-height: 3
