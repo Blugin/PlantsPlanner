@@ -27,7 +27,7 @@ class StackablePlantsData extends PlantsData{
 
     /** @inheritDoc */
     public static function fromArray(array $array) : PlantsData{
-        return new BearablePlantsData(
+        return new StackablePlantsData(
             (float) ($array["grow-seconds"] ?? 60.0),
             (int) ($array["max-height"] ?? 3)
         );
