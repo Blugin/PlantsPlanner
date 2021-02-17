@@ -1,0 +1,17 @@
+# Main configuration file for TiledPlants
+# Some of these settings are safe, others can break your server if modified incorrectly
+# New settings/defaults won't appear automatically in this file when upgrading.
+
+# Plants update delay [flot: seconds] (default: 30.0)
+# It is recommended to be as high as possible. Lower = more CPU, check more often
+delay: 30.0
+
+# Grow times of each plant [float: seconds] (default: 300.0)
+# It means grow to the next level. (not full-growth)
+growtimes:
+  wheat: 300.0
+  potato: 300.0
+  carrot: 300.0
+  beetroot: 300.0
+  mellon_stem: 300.0
+  pumpkin_stem: 300.0
