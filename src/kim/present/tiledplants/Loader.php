@@ -4,13 +4,16 @@ declare(strict_types=1);
 namespace kim\present\tiledplants;
 
 use kim\present\tiledplants\block\TiledBeetroot;
+use kim\present\tiledplants\block\TiledCactus;
 use kim\present\tiledplants\block\TiledCarrot;
 use kim\present\tiledplants\block\TiledMelonStem;
 use kim\present\tiledplants\block\TiledPotato;
 use kim\present\tiledplants\block\TiledPumpkinStem;
+use kim\present\tiledplants\block\TiledSugarcane;
 use kim\present\tiledplants\block\TiledWheat;
 use kim\present\tiledplants\data\BearablePlantData;
 use kim\present\tiledplants\data\PlantData;
+use kim\present\tiledplants\data\StackablePlantData;
 use kim\present\tiledplants\tile\Plants;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockIdentifier;
@@ -26,8 +29,12 @@ use pocketmine\utils\SingletonTrait;
  * @method static PlantData POTATO()
  * @method static PlantData CARROT()
  * @method static PlantData BEETROOT()
- * @method static PlantData MELON_STEM()
- * @method static PlantData PUMPKIN_STEM()
+ *
+ * @method static BearablePlantData MELON_STEM()
+ * @method static BearablePlantData PUMPKIN_STEM()
+ *
+ * @method static StackablePlantData SUGARCANE()
+ * @method static StackablePlantData CACTUS()
  */
 final class Loader extends PluginBase{
     use SingletonTrait, RegistryTrait;
@@ -48,6 +55,8 @@ final class Loader extends PluginBase{
         $factory->register(new TiledBeetroot(new BlockIdentifier(BlockLegacyIds::BEETROOT_BLOCK, 0, ItemIds::BEETROOT, Plants::class), "Beetroot Block"), true);
         $factory->register(new TiledMelonStem(new BlockIdentifier(BlockLegacyIds::MELON_STEM, 0, ItemIds::MELON_SEEDS, Plants::class), "Melon Stem"), true);
         $factory->register(new TiledPumpkinStem(new BlockIdentifier(BlockLegacyIds::PUMPKIN_STEM, 0, ItemIds::PUMPKIN_SEEDS, Plants::class), "Pumpkin Stem"), true);
+        $factory->register(new TiledSugarcane(new BlockIdentifier(BlockLegacyIds::SUGARCANE_BLOCK, 0, ItemIds::SUGARCANE, Plants::class), "Sugarcane"), true);
+        $factory->register(new TiledCactus(new BlockIdentifier(BlockLegacyIds::CACTUS, 0, ItemIds::CACTUS, Plants::class), "Cactus"), true);
     }
 
     private function getConfigFloat(string $k, float $default) : float{
@@ -68,6 +77,14 @@ final class Loader extends PluginBase{
         self::_registryRegister("pumpkin_stem", new BearablePlantData(
             $config->getConfigFloat("pumpkin_stem.grow-seconds", 30.0),
             $config->getConfigFloat("pumpkin_stem.bear-seconds", 300.0)
+        ));
+        self::_registryRegister("sugarcane", new StackablePlantData(
+            $config->getConfigFloat("sugarcane.grow-seconds", 60.0),
+            (int) $config->getConfigFloat("sugarcane.max-height", 3)
+        ));
+        self::_registryRegister("cactus", new StackablePlantData(
+            $config->getConfigFloat("cactus.grow-seconds", 60.0),
+            (int) $config->getConfigFloat("cactus.max-height", 3)
         ));
     }
 }

@@ -40,3 +40,15 @@ pumpkin_stem:
   # Same as `mellon_stem`
   grow-seconds: 30.0
   bear-seconds: 300.0
+
+cactus:
+  # Same as `wheat`
+  grow-seconds: 30.0
+
+  # Max grow height [int: block] (default: 3)
+  max-height: 3
+
+sugarcane:
+  # Same as `cactus`
+  grow-seconds: 30.0
+  max-height: 3
