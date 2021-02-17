@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace kim\present\tiledplants\data;
+namespace kim\present\plantsplaner\data;
 
-class StackablePlantData extends PlantData{
+class StackablePlantsData extends PlantsData{
     protected int $maxHeight;
 
     public function __construct(float $growSeconds, int $maxHeight){

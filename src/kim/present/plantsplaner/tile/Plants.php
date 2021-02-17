@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace kim\present\tiledplants\tile;
+namespace kim\present\plantsplaner\tile;
 
-use kim\present\tiledplants\block\ITiledPlant;
-use kim\present\tiledplants\Loader;
+use kim\present\plantsplaner\block\IPlants;
+use kim\present\plantsplaner\Loader;
 use pocketmine\block\Block;
 use pocketmine\block\tile\Tile;
 use pocketmine\event\block\BlockGrowEvent;
@@ -35,30 +35,30 @@ class Plants extends Tile{
         $nbt->setFloat(self::TAG_LAST_TIME, $this->lastTime);
     }
 
-    /** @override for grow up plant */
+    /** @override for grow up plants */
     public function onUpdate() : bool{
         if($this->closed)
             return false;
 
         $block = $this->getBlock();
-        if(!$block instanceof ITiledPlant || $block->isRipe())
+        if(!$block instanceof IPlants || $block->canGrow())
             return false;
 
         $this->timings->startTiming();
         $diffSeconds = microtime(true) - $this->lastTime;
         $growSeconds = $block->getGrowSeconds();
-        while(!$block->isRipe() && $diffSeconds > $growSeconds){
+        while(!$block->canGrow() && $diffSeconds > $growSeconds){
             $diffSeconds -= $growSeconds;
             $block->grow();
 
             $block = $this->getBlock();
-            if(!$block instanceof ITiledPlant)
+            if(!$block instanceof IPlants)
                 return false;
         }
         $this->lastTime = microtime(true) - $diffSeconds;
         $this->timings->stopTiming();
 
-        return !$block->isRipe();
+        return !$block->canGrow();
     }
 
     public function getLastTime() : float{
@@ -69,7 +69,7 @@ class Plants extends Tile{
         $this->lastTime = $lastTime;
     }
 
-    public static function growPlant(Block $block, Block $newState) : void{
+    public static function growPlants(Block $block, Block $newState) : void{
         $ev = new BlockGrowEvent($block, $newState);
         $ev->call();
         if(!$ev->isCancelled()){

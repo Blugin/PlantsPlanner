@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace kim\present\tiledplants\data;
+namespace kim\present\plantsplaner\data;
 
-class PlantData{
+class PlantsData{
     private float $growSeconds;
 
     public function __construct(float $growSeconds){

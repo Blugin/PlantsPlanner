@@ -1,32 +1,33 @@
 <?php
 declare(strict_types=1);
 
-namespace kim\present\tiledplants\traits;
+namespace kim\present\plantsplaner\traits;
 
-use kim\present\tiledplants\block\ITiledPlant;
-use kim\present\tiledplants\data\BearablePlantData;
-use kim\present\tiledplants\Loader;
-use kim\present\tiledplants\tile\Plants;
+use kim\present\plantsplaner\block\IPlants;
+use kim\present\plantsplaner\data\BearablePlantsData;
+use kim\present\plantsplaner\data\PlantsData;
+use kim\present\plantsplaner\Loader;
+use kim\present\plantsplaner\tile\Plants;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\Stem;
 use pocketmine\math\Facing;
 
 /**
- * This trait provides a implementation for `Stem` and `ITiledPlant` to reduce boilerplate.
+ * This trait provides a implementation for `Stem` and `IPlants` to reduce boilerplate.
  *
- * @see Stem, ITiledPlant
+ * @see Stem, IPlants
  */
-trait TiledStemTrait{
-    use TiledCropsTrait;
+trait StemPlantsTrait{
+    use CropsPlantsTrait;
 
     public function grow() : void{
-        /** @var Stem|ITiledPlant $this */
-        if(!$this->isRipe()){
+        /** @var Stem|IPlants $this */
+        if(!$this->canGrow()){
             if($this->age < 7){
                 $block = clone $this;
                 ++$block->age;
 
-                Plants::growPlant($this, $block);
+                Plants::growPlants($this, $block);
             }else{
                 $grow = $this->getPlant();
 
@@ -36,7 +37,7 @@ trait TiledStemTrait{
                     $side = $this->getSide($face);
                     $down = $side->getSide(Facing::DOWN);
                     if($side->canBeReplaced() && ($down->getId() === BlockLegacyIds::FARMLAND || $down->getId() === BlockLegacyIds::GRASS || $down->getId() === BlockLegacyIds::DIRT)){
-                        Plants::growPlant($side, $grow);
+                        Plants::growPlants($side, $grow);
                     }
                 }
             }
@@ -45,7 +46,7 @@ trait TiledStemTrait{
 
     public function onNearbyBlockChange() : void{
         parent::onNearbyBlockChange();
-        if(!$this->isRipe()){
+        if(!$this->canGrow()){
             $plantsTile = $this->pos->getWorld()->getTile($this->pos);
             if($plantsTile instanceof Plants){
                 $plantsTile->setLastTime(microtime(true));
@@ -54,8 +55,8 @@ trait TiledStemTrait{
         }
     }
 
-    public function isRipe() : bool{
-        /** @var Stem|ITiledPlant $this */
+    public function canGrow() : bool{
+        /** @var Stem|IPlants $this */
         if($this->age < 7){
             return $this->age >= 7;
         }else{
@@ -70,8 +71,10 @@ trait TiledStemTrait{
     }
 
     public function getGrowSeconds() : float{
-        /** @var BearablePlantData $plantData */
-        $plantData = $this->getPlantData();
-        return $this->age < 7 ? $plantData->getGrowSeconds() : $plantData->getBearSeconds();
+        /**
+         * @see PlantsData::getGrowSeconds()
+         * @see BearablePlantsData::getBearSeconds()
+         */
+        return $this->age < 7 ? $this->getPlantsData()->getGrowSeconds() : $this->getPlantsData()->getBearSeconds();
     }
 }

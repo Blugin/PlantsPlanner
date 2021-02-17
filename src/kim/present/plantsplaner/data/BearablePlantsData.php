@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace kim\present\tiledplants\data;
+namespace kim\present\plantsplaner\data;
 
-class BearablePlantData extends PlantData{
+class BearablePlantsData extends PlantsData{
     protected float $bearSeconds;
 
     public function __construct(float $growSeconds, float $bearSeconds){

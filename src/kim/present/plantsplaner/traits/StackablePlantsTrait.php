@@ -1,27 +1,27 @@
 <?php
 declare(strict_types=1);
 
-namespace kim\present\tiledplants\traits;
+namespace kim\present\plantsplaner\traits;
 
-use kim\present\tiledplants\block\ITiledPlant;
-use kim\present\tiledplants\data\StackablePlantData;
-use kim\present\tiledplants\Loader;
-use kim\present\tiledplants\tile\Plants;
+use kim\present\plantsplaner\block\IPlants;
+use kim\present\plantsplaner\data\StackablePlantsData;
+use kim\present\plantsplaner\Loader;
+use kim\present\plantsplaner\tile\Plants;
 use pocketmine\block\Block;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\math\Facing;
 
 /**
- * This trait provides a implementation for stackable `ITiledPlant` to reduce boilerplate.
+ * This trait provides a implementation for stackable `IPlants` to reduce boilerplate.
  *
- * @see ITiledPlant
+ * @see IPlants
  */
-trait TiledStackTrait{
-    use TiledPlantsTrait;
+trait StackablePlantsTrait{
+    use PlantsTrait;
 
     public function grow() : void{
-        /** @var Block|ITiledPlant $this */
-        if(!$this->isRipe()){
+        /** @var Block|IPlants $this */
+        if(!$this->canGrow()){
             $world = $this->pos->getWorld();
             for($y = 1; $y < $this->getMaxHeight(); ++$y){
                 $vec = $this->pos->add(0, $y, 0);
@@ -30,13 +30,13 @@ trait TiledStackTrait{
 
                 $block = $world->getBlock($vec);
                 if($block->getId() === BlockLegacyIds::AIR){
-                    Plants::growPlant($block, clone $this);
+                    Plants::growPlants($block, clone $this);
                 }
             }
         }
     }
 
-    public function isRipe() : bool{
+    public function canGrow() : bool{
         if($this->getSide(Facing::DOWN)->isSameType($this))
             return true;
 
@@ -62,12 +62,15 @@ trait TiledStackTrait{
     }
 
     public function getMaxHeight() : int{
-        /** @var StackablePlantData $plantData */
-        $plantData = $this->getPlantData();
-        return $plantData->getMaxHeight();
+        /** @see StackablePlantsData::getMaxHeight() */
+        return $this->getPlantsData()->getMaxHeight();
     }
 
     public function onNearbyBlockChange() : void{
+        /**
+         * @noinspection PhpUndefinedClassInspection
+         * @see Block::onNearbyBlockChange()
+         */
         parent::onNearbyBlockChange();
 
         $floor = $this;

@@ -1,4 +1,4 @@
-# Main configuration file for TiledPlants
+# Main configuration file for PlantsPlanner
 # Some of these settings are safe, others can break your server if modified incorrectly
 # New settings/defaults won't appear automatically in this file when upgrading.
 
@@ -9,7 +9,7 @@ global:
   update-delay: 30.0
 
 # Settings for plants.
-# Additional properties may exist depending on the type of plant.
+# Additional properties may exist depending on the type of plants.
 # The description of the same property is written only once.
 wheat:
   # Seconds it takes to grow [float: seconds] (default: 60.0)
