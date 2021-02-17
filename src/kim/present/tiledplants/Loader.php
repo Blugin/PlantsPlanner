@@ -56,7 +56,7 @@ final class Loader extends PluginBase{
 
     protected static function setup() : void{
         $config = self::getInstance();
-        self::$updateDelay = (int) ($config->getConfigFloat("global.update-delay", 60) * 20);
+        self::$updateDelay = max(1, (int) ($config->getConfigFloat("global.update-delay", 60) * 20));
         self::_registryRegister("wheat", new PlantData($config->getConfigFloat("wheat.grow-seconds", 60.0)));
         self::_registryRegister("potato", new PlantData($config->getConfigFloat("potato.grow-seconds", 60.0)));
         self::_registryRegister("carrot", new PlantData($config->getConfigFloat("carrot.grow-seconds", 60.0)));
