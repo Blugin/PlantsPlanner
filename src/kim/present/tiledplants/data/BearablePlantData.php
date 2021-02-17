@@ -14,4 +14,8 @@ class BearablePlantData extends PlantData{
     public function getBearSeconds() : float{
         return $this->bearSeconds;
     }
+
+    public function isTemporary() : bool{
+        return false;
+    }
 }

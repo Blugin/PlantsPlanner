@@ -14,4 +14,8 @@ class StackablePlantData extends PlantData{
     public function getMaxHeight() : int{
         return $this->maxHeight;
     }
+
+    public function isTemporary() : bool{
+        return false;
+    }
 }

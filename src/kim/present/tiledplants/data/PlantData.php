@@ -13,4 +13,8 @@ class PlantData{
     public function getGrowSeconds() : float{
         return $this->growSeconds;
     }
+
+    public function isTemporary() : bool{
+        return true;
+    }
 }

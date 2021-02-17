@@ -19,8 +19,12 @@ trait TiledPlantsTrait{
     public function onScheduledUpdate() : void{
         /** @var Block|ITiledPlant $this */
         $plantsTile = $this->pos->getWorld()->getTile($this->pos);
-        if($plantsTile instanceof Plants and $plantsTile->onUpdate()){
-            $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Loader::$updateDelay);
+        if($plantsTile instanceof Plants){
+            if($plantsTile->onUpdate()){
+                $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Loader::$updateDelay);
+            }elseif($this->getPlantData()->isTemporary()){
+                $plantsTile->close();
+            }
         }
     }
 
