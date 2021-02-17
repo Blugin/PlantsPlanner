@@ -54,13 +54,13 @@ class Plants extends Tile{
             return false;
 
         $block = $this->getBlock();
-        if(!$block instanceof IPlants || $block->canGrow()) //
+        if(!$block instanceof IPlants || !$block->canGrow())
             return false;
 
         $this->timings->startTiming();
         $diffSeconds = microtime(true) - $this->lastTime;
         $growSeconds = $block->getGrowSeconds();
-        while(!$block->canGrow() && $diffSeconds > $growSeconds){
+        while($block->canGrow() && $diffSeconds > $growSeconds){
             $diffSeconds -= $growSeconds;
             $block->grow();
 
@@ -71,7 +71,7 @@ class Plants extends Tile{
         $this->lastTime = microtime(true) - $diffSeconds;
         $this->timings->stopTiming();
 
-        return !$block->canGrow();
+        return $block->canGrow();
     }
 
     public function getLastTime() : float{

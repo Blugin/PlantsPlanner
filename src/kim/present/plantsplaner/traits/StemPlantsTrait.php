@@ -22,7 +22,7 @@ trait StemPlantsTrait{
     /** @inheritDoc */
     public function grow() : void{
         /** @var Stem|IPlants $this */
-        if(!$this->canGrow()){
+        if($this->canGrow()){
             if($this->age < 7){
                 $block = clone $this;
                 ++$block->age;
@@ -48,15 +48,15 @@ trait StemPlantsTrait{
     public function canGrow() : bool{
         /** @var Stem|IPlants $this */
         if($this->age < 7){
-            return $this->age >= 7;
+            return true;
         }else{
             $stemPlant = $this->getPlant();
             foreach(Facing::HORIZONTAL as $face){
                 if($this->getSide($face)->isSameType($stemPlant)){
-                    return true;
+                    return false;
                 }
             }
-            return false;
+            return true;
         }
     }
 
@@ -76,7 +76,7 @@ trait StemPlantsTrait{
     public function onNearbyBlockChange() : void{
         parent::onNearbyBlockChange();
 
-        if(!$this->canGrow()){
+        if($this->canGrow()){
             $plantsTile = $this->pos->getWorld()->getTile($this->pos);
             if($plantsTile instanceof Plants){
                 $plantsTile->setLastTime(microtime(true));

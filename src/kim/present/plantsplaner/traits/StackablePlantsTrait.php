@@ -21,7 +21,7 @@ trait StackablePlantsTrait{
     /** @inheritDoc */
     public function grow() : void{
         /** @var Block|IPlants $this */
-        if(!$this->canGrow()){
+        if($this->canGrow()){
             $world = $this->pos->getWorld();
             for($y = 1; $y < $this->getMaxHeight(); ++$y){
                 $vec = $this->pos->add(0, $y, 0);
@@ -39,7 +39,7 @@ trait StackablePlantsTrait{
     /** @inheritDoc */
     public function canGrow() : bool{
         if($this->getSide(Facing::DOWN)->isSameType($this))
-            return true;
+            return false;
 
         $world = $this->pos->getWorld();
         $canGrow = false;
@@ -59,7 +59,7 @@ trait StackablePlantsTrait{
                 break;
             }
         }
-        return !$canGrow;
+        return $canGrow;
     }
 
     /** @see StackablePlantsData::getMaxHeight() */

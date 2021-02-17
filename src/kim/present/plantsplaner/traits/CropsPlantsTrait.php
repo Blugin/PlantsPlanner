@@ -18,7 +18,7 @@ trait CropsPlantsTrait{
     /** @inheritDoc */
     public function grow() : void{
         /** @var Crops|IPlants $this */
-        if(!$this->canGrow()){
+        if($this->canGrow()){
             $block = clone $this;
             ++$block->age;
             Plants::growPlants($this, $block);
@@ -28,6 +28,6 @@ trait CropsPlantsTrait{
     /** @inheritDoc */
     public function canGrow() : bool{
         /** @var Crops|IPlants $this */
-        return $this->age >= 7;
+        return $this->age < 7;
     }
 }
