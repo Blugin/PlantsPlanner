@@ -6,9 +6,9 @@ namespace kim\present\plantsplaner\block;
 use kim\present\plantsplaner\data\DefaultPlants;
 use kim\present\plantsplaner\data\PlantsData;
 use kim\present\plantsplaner\traits\StemPlantsTrait;
-use pocketmine\block\MelonStem;
+use pocketmine\block\PumpkinStem;
 
-final class PumpkinStemPlants extends MelonStem implements IPlants{
+final class PumpkinStemPlants extends PumpkinStem implements IPlants{
     use StemPlantsTrait;
 
     public function getPlantsData() : PlantsData{
