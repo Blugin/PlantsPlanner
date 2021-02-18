@@ -23,13 +23,17 @@ trait PlantsTrait{
      */
     public function onScheduledUpdate() : void{
         /** @var Block|IPlants $this */
-        $plantsTile = $this->pos->getWorld()->getTile($this->pos);
-        if($plantsTile instanceof Plants){
-            if($plantsTile->checkGrowth()){
-                $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Plants::$updateDelay);
-            }elseif($this->getPlantsData()->isTemporary()){
-                $plantsTile->close();
-            }
+        $world = $this->pos->getWorld();
+        $plantsTile = $world->getTile($this->pos);
+        if(!$plantsTile instanceof Plants){
+            $plantsTile = new Plants($world, $this->pos);
+            $world->addTile($plantsTile);
+        }
+
+        if($plantsTile->checkGrowth()){
+            $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Plants::$updateDelay);
+        }elseif($this->getPlantsData()->isTemporary()){
+            $plantsTile->close();
         }
     }
 
