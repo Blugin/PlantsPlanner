@@ -24,7 +24,7 @@ trait StackablePlantsTrait{
         /** @var Block|IPlants $this */
         if($this->canGrow()){
             $world = $this->pos->getWorld();
-            for($y = 1; $y < $this->getMaxHeight(); ++$y){
+            for($y = 1; $y < $this->getMaxGrowth(); ++$y){
                 $vec = $this->pos->add(0, $y, 0);
                 if(!$world->isInWorld($vec->x, $vec->y, $vec->z))
                     break;
@@ -55,7 +55,7 @@ trait StackablePlantsTrait{
             return false;
 
         $world = $this->pos->getWorld();
-        for($y = 1; $y < $this->getMaxHeight(); ++$y){
+        for($y = 1; $y < $this->getMaxGrowth(); ++$y){
             $vec = $this->pos->add(0, $y, 0);
             if(!$world->isInWorld($vec->x, $vec->y, $vec->z))
                 break;
@@ -73,9 +73,9 @@ trait StackablePlantsTrait{
         return false;
     }
 
-    /** @see StackablePlantsData::getMaxHeight() */
-    public function getMaxHeight() : int{
-        return $this->getPlantsData()->getMaxHeight();
+    /** @see StackablePlantsData::getMaxGrowth() */
+    public function getMaxGrowth() : int{
+        return $this->getPlantsData()->getMaxGrowth();
     }
 
     /**

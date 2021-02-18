@@ -8,16 +8,16 @@ namespace kim\present\plantsplaner\data;
  * It has a data for growth height limit.
  */
 class StackablePlantsData extends PlantsData{
-    /** The limit of block grow height */
-    protected int $maxHeight;
+    /** The limit of block growth */
+    protected int $maxGrowth;
 
-    public function __construct(float $growSeconds, int $maxHeight){
+    public function __construct(float $growSeconds, int $maxGrowth){
         parent::__construct($growSeconds);
-        $this->maxHeight = $maxHeight;
+        $this->maxGrowth = $maxGrowth;
     }
 
-    public function getMaxHeight() : int{
-        return $this->maxHeight;
+    public function getMaxGrowth() : int{
+        return $this->maxGrowth;
     }
 
     /** @inheritDoc */
@@ -29,7 +29,7 @@ class StackablePlantsData extends PlantsData{
     public static function fromArray(array $array) : PlantsData{
         return new StackablePlantsData(
             (float) ($array["grow-seconds"] ?? 60.0),
-            (int) ($array["max-height"] ?? 3)
+            (int) ($array["max-height"] ?? $array["max-growth"] ?? 3)
         );
     }
 }

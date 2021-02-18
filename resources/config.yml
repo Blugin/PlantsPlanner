@@ -45,10 +45,10 @@ cactus:
   # Same as `wheat`
   grow-seconds: 60.0
 
-  # Max grow height [int: block] (default: 3)
-  max-height: 3
+  # Max growth count [int: block] (default: 3)
+  max-growth: 3
 
 sugarcane:
   # Same as `cactus`
   grow-seconds: 60.0
-  max-height: 3
+  max-growth: 3
