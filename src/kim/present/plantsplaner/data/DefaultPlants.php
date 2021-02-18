@@ -11,12 +11,16 @@ use pocketmine\utils\RegistryTrait;
  * @method static PlantsData POTATO()
  * @method static PlantsData CARROT()
  * @method static PlantsData BEETROOT()
+ * @method static PlantsData SAPLING()
+ * @method static PlantsData COCOA()
+ * @method static PlantsData BAMBOO_SAPLING()
  *
  * @method static BearablePlantsData MELON_STEM()
  * @method static BearablePlantsData PUMPKIN_STEM()
  *
  * @method static StackablePlantsData SUGARCANE()
  * @method static StackablePlantsData CACTUS()
+ * @method static StackablePlantsData BAMBOO()
  */
 final class DefaultPlants{
     use RegistryTrait;
@@ -25,7 +29,7 @@ final class DefaultPlants{
         $config = Loader::getInstance()->getConfig();
 
         //Register normal plants
-        foreach(["wheat", "potato", "carrot", "beetroot"] as $name){
+        foreach(["wheat", "potato", "carrot", "beetroot", "sapling", "cocoa", "bamboo_sapling"] as $name){
             self::_registryRegister($name, PlantsData::fromArray($config->get($name, [])));
         }
 
@@ -35,7 +39,7 @@ final class DefaultPlants{
         }
 
         //Register stackable plants
-        foreach(["sugarcane", "cactus"] as $name){
+        foreach(["sugarcane", "cactus", "bamboo"] as $name){
             self::_registryRegister($name, StackablePlantsData::fromArray($config->get($name, [])));
         }
     }

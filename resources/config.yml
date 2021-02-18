@@ -28,6 +28,18 @@ beetroot:
   # Same as `wheat`
   grow-seconds: 60.0
 
+sapling:
+  # Same as `wheat`, but only 2 level (default: 360.0)
+  grow-seconds: 360.0
+
+bamboo-sapling:
+  # Same as `wheat`, but only 2 level (default: 360.0)
+  grow-seconds: 360.0
+
+cocoa:
+  # Same as `wheat`, but only 3 level (default: 180.0)
+  grow-seconds: 180.0
+
 mellon_stem:
   # Seconds it takes to grow stem [float: seconds] (default: 30.0)
   # It means grow to the next level. (not full-growth time)
@@ -52,3 +64,10 @@ sugarcane:
   # Same as `cactus`
   grow-seconds: 60.0
   max-growth: 3
+
+bamboo:
+  # Same as `cactus`
+  grow-seconds: 60.0
+
+  # Same as `cactus`, Originally, it grows infinitely. (default: 7.0)
+  max-growth: 7
