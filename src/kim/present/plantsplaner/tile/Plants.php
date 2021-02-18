@@ -9,7 +9,6 @@ use pocketmine\block\tile\Tile;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\scheduler\ClosureTask;
-use pocketmine\Server;
 use pocketmine\world\World;
 
 /**
@@ -86,6 +85,9 @@ class Plants extends Tile{
     }
 
     public static function schedulePlants(Plants $tile, IPlants $block) : void{
+        if($tile->pos === null)
+            return;
+
         $delay = ($block->getGrowSeconds() - (microtime(true) - $tile->getLastTime()));
 
         $tile->pos->getWorld()->scheduleDelayedBlockUpdate($tile->pos, (int) max(1, $delay * 20 + 1));
