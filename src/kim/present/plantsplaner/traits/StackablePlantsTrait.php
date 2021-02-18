@@ -29,8 +29,14 @@ trait StackablePlantsTrait{
                     break;
 
                 $block = $world->getBlock($vec);
+                if($block->isSameType($this))
+                    continue;
+
                 if($block->getId() === BlockLegacyIds::AIR){
                     Plants::growPlants($block, clone $this);
+                    break;
+                }else{
+                    break;
                 }
             }
         }
@@ -42,7 +48,6 @@ trait StackablePlantsTrait{
             return false;
 
         $world = $this->pos->getWorld();
-        $canGrow = false;
         for($y = 1; $y < $this->getMaxHeight(); ++$y){
             $vec = $this->pos->add(0, $y, 0);
             if(!$world->isInWorld($vec->x, $vec->y, $vec->z))
@@ -53,13 +58,12 @@ trait StackablePlantsTrait{
                 continue;
 
             if($block->getId() === BlockLegacyIds::AIR){
-                $canGrow = true;
-                break;
+                return true;
             }else{
-                break;
+                return false;
             }
         }
-        return $canGrow;
+        return false;
     }
 
     /** @see StackablePlantsData::getMaxHeight() */
