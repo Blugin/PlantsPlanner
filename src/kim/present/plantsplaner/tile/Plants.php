@@ -60,7 +60,8 @@ class Plants extends Tile{
             $diffSeconds -= $growSeconds;
             $block->growPlants();
 
-            $block = $this->getBlock();
+            //HACK: for prevents errors that occur if tiles are destroyed as plants grow
+            $block = $block->getSide(0, 0);
             if(!$block instanceof IPlants)
                 return false;
         }
