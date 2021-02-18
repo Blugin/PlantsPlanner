@@ -20,7 +20,7 @@ trait StackablePlantsTrait{
     use PlantsTrait;
 
     /** @inheritDoc */
-    public function grow() : void{
+    public function growPlants() : void{
         /** @var Block|IPlants $this */
         if($this->canGrow()){
             $world = $this->pos->getWorld();

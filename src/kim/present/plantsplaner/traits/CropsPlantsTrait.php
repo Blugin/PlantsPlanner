@@ -16,7 +16,7 @@ trait CropsPlantsTrait{
     use PlantsTrait;
 
     /** @inheritDoc */
-    public function grow() : void{
+    public function growPlants() : void{
         /** @var Crops|IPlants $this */
         if($this->canGrow()){
             $block = clone $this;

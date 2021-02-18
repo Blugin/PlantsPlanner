@@ -21,7 +21,7 @@ trait StemPlantsTrait{
     use CropsPlantsTrait;
 
     /** @inheritDoc */
-    public function grow() : void{
+    public function growPlants() : void{
         /** @var Stem|IPlants $this */
         if($this->canGrow()){
             if($this->age < 7){

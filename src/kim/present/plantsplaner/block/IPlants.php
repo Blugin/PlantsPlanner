@@ -22,5 +22,5 @@ interface IPlants{
     public function canGrow() : bool;
 
     /** Proccess block growing */
-    public function grow() : void;
+    public function growPlants() : void;
 }

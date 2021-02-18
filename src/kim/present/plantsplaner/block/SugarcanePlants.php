@@ -9,15 +9,9 @@ use kim\present\plantsplaner\traits\StackablePlantsTrait;
 use pocketmine\block\Sugarcane;
 
 final class SugarcanePlants extends Sugarcane implements IPlants{
-    use StackablePlantsTrait {
-        grow as Plants_grow;
-    }
+    use StackablePlantsTrait;
 
     public function getPlantsData() : PlantsData{
         return DefaultPlants::SUGARCANE();
-    }
-
-    public function grow() : void{
-        $this->Plants_grow();
     }
 }

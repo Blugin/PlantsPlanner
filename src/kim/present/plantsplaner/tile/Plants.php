@@ -58,7 +58,7 @@ class Plants extends Tile{
         $growSeconds = $block->getGrowSeconds();
         while($block->canGrow() && $diffSeconds > $growSeconds){
             $diffSeconds -= $growSeconds;
-            $block->grow();
+            $block->growPlants();
 
             $block = $this->getBlock();
             if(!$block instanceof IPlants)
