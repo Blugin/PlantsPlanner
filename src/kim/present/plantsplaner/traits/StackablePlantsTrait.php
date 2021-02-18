@@ -8,6 +8,7 @@ use kim\present\plantsplaner\data\StackablePlantsData;
 use kim\present\plantsplaner\tile\Plants;
 use pocketmine\block\Block;
 use pocketmine\block\BlockLegacyIds;
+use pocketmine\event\block\BlockGrowEvent;
 use pocketmine\math\Facing;
 
 /**
@@ -33,7 +34,13 @@ trait StackablePlantsTrait{
                     continue;
 
                 if($block->getId() === BlockLegacyIds::AIR){
-                    Plants::growPlants($block, clone $this);
+                    $ev = new BlockGrowEvent($block, clone $this);
+                    $ev->call();
+                    if(!$ev->isCancelled()){
+                        $pos = $block->getPos();
+                        $world = $pos->getWorld();
+                        $world->setBlock($pos, $ev->getNewState());
+                    }
                     break;
                 }else{
                     break;

@@ -4,13 +4,9 @@ declare(strict_types=1);
 namespace kim\present\plantsplaner\tile;
 
 use kim\present\plantsplaner\block\IPlants;
-use pocketmine\block\Block;
 use pocketmine\block\tile\Tile;
-use pocketmine\event\block\BlockGrowEvent;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
-use pocketmine\Server;
 use pocketmine\world\World;
 
 /**
@@ -80,21 +76,5 @@ class Plants extends Tile{
 
     public function setLastTime(float $lastTime) : void{
         $this->lastTime = $lastTime;
-    }
-
-    /** Convenience method for call BlockGrowEvent and spawn particle */
-    public static function growPlants(Block $block, Block $newState) : void{
-        $ev = new BlockGrowEvent($block, $newState);
-        $ev->call();
-        if(!$ev->isCancelled()){
-            $pos = $block->getPos();
-            $world = $pos->getWorld();
-            $world->setBlock($pos, $ev->getNewState());
-
-            $pk = new SpawnParticleEffectPacket();
-            $pk->position = $pos->add(0.5, 0, 0.5);
-            $pk->particleName = "minecraft:crop_growth_emitter";
-            Server::getInstance()->broadcastPackets($world->getViewersForPosition($pos), [$pk]);
-        }
     }
 }

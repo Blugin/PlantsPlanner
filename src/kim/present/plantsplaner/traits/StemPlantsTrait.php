@@ -9,6 +9,7 @@ use kim\present\plantsplaner\data\PlantsData;
 use kim\present\plantsplaner\tile\Plants;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\Stem;
+use pocketmine\event\block\BlockGrowEvent;
 use pocketmine\math\Facing;
 
 /**
@@ -27,7 +28,13 @@ trait StemPlantsTrait{
                 $block = clone $this;
                 ++$block->age;
 
-                Plants::growPlants($this, $block);
+                $ev = new BlockGrowEvent($this, $block);
+                $ev->call();
+                if(!$ev->isCancelled()){
+                    $pos = $this->getPos();
+                    $world = $pos->getWorld();
+                    $world->setBlock($pos, $ev->getNewState());
+                }
             }else{
                 $grow = $this->getPlant();
 
@@ -37,7 +44,13 @@ trait StemPlantsTrait{
                     $side = $this->getSide($face);
                     $down = $side->getSide(Facing::DOWN);
                     if($side->canBeReplaced() && ($down->getId() === BlockLegacyIds::FARMLAND || $down->getId() === BlockLegacyIds::GRASS || $down->getId() === BlockLegacyIds::DIRT)){
-                        Plants::growPlants($side, $grow);
+                        $ev = new BlockGrowEvent($side, $grow);
+                        $ev->call();
+                        if(!$ev->isCancelled()){
+                            $pos = $side->getPos();
+                            $world = $pos->getWorld();
+                            $world->setBlock($pos, $ev->getNewState());
+                        }
                         break;
                     }
                 }

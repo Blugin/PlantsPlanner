@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace kim\present\plantsplaner\traits;
 
 use kim\present\plantsplaner\block\IPlants;
-use kim\present\plantsplaner\tile\Plants;
 use pocketmine\block\Crops;
+use pocketmine\event\block\BlockGrowEvent;
 
 /**
  * This trait provides a implementation for `Crops` and `IPlants` to reduce boilerplate.
@@ -21,7 +21,14 @@ trait CropsPlantsTrait{
         if($this->canGrow()){
             $block = clone $this;
             ++$block->age;
-            Plants::growPlants($this, $block);
+
+            $ev = new BlockGrowEvent($this, $block);
+            $ev->call();
+            if(!$ev->isCancelled()){
+                $pos = $this->getPos();
+                $world = $pos->getWorld();
+                $world->setBlock($pos, $ev->getNewState());
+            }
         }
     }
 
