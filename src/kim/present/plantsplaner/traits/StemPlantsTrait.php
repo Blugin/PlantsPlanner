@@ -38,6 +38,7 @@ trait StemPlantsTrait{
                     $down = $side->getSide(Facing::DOWN);
                     if($side->canBeReplaced() && ($down->getId() === BlockLegacyIds::FARMLAND || $down->getId() === BlockLegacyIds::GRASS || $down->getId() === BlockLegacyIds::DIRT)){
                         Plants::growPlants($side, $grow);
+                        break;
                     }
                 }
             }
