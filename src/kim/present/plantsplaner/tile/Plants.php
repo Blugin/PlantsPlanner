@@ -4,9 +4,12 @@ declare(strict_types=1);
 namespace kim\present\plantsplaner\tile;
 
 use kim\present\plantsplaner\block\IPlants;
+use kim\present\plantsplaner\Loader;
 use pocketmine\block\tile\Tile;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\scheduler\ClosureTask;
+use pocketmine\Server;
 use pocketmine\world\World;
 
 /**
@@ -16,9 +19,6 @@ use pocketmine\world\World;
 class Plants extends Tile{
     public const TAG_LAST_TIME = "LastTime";
 
-    /** Delay to check whether the plants is growing */
-    public static int $updateDelay = 60 * 20;
-
     /** Last time to checked plant growth */
     protected float $lastTime;
 
@@ -27,7 +27,13 @@ class Plants extends Tile{
         parent::__construct($world, $pos);
 
         $this->lastTime = microtime(true);
-        $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Plants::$updateDelay);
+
+        $block = $this->getBlock();
+        if($block instanceof IPlants){
+            self::schedulePlants($this, $block);
+        }else{
+            Loader::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function() : void{ $this->close(); }), 1);
+        }
     }
 
     /** @override to read last-time from nbt and run check-growth */
@@ -77,5 +83,11 @@ class Plants extends Tile{
 
     public function setLastTime(float $lastTime) : void{
         $this->lastTime = $lastTime;
+    }
+
+    public static function schedulePlants(Plants $tile, IPlants $block) : void{
+        $delay = ($block->getGrowSeconds() - (microtime(true) - $tile->getLastTime()));
+
+        $tile->pos->getWorld()->scheduleDelayedBlockUpdate($tile->pos, (int) max(1, $delay * 20 + 1));
     }
 }

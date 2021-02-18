@@ -6,7 +6,6 @@ namespace kim\present\plantsplaner\traits;
 use kim\present\plantsplaner\block\IPlants;
 use kim\present\plantsplaner\data\BearablePlantsData;
 use kim\present\plantsplaner\data\PlantsData;
-use kim\present\plantsplaner\tile\Plants;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\Stem;
 use pocketmine\event\block\BlockGrowEvent;
@@ -65,12 +64,17 @@ trait StemPlantsTrait{
             return true;
         }else{
             $stemPlant = $this->getPlant();
+            $hasSpace = false;
             foreach(Facing::HORIZONTAL as $face){
-                if($this->getSide($face)->isSameType($stemPlant)){
+                $side = $this->getSide($face);
+                $down = $side->getSide(Facing::DOWN);
+                if($side->isSameType($stemPlant)){
                     return false;
+                }elseif($side->canBeReplaced() && ($down->getId() === BlockLegacyIds::FARMLAND || $down->getId() === BlockLegacyIds::GRASS || $down->getId() === BlockLegacyIds::DIRT)){
+                    $hasSpace = true;
                 }
             }
-            return true;
+            return $hasSpace;
         }
     }
 
@@ -81,21 +85,5 @@ trait StemPlantsTrait{
      */
     public function getGrowSeconds() : float{
         return $this->age < 7 ? $this->getPlantsData()->getGrowSeconds() : $this->getPlantsData()->getBearSeconds();
-    }
-
-    /**
-     * @override to register scheduling when near block changed.
-     * If fruit is breaked, adds plants to scheduling because it will have to grow again.
-     */
-    public function onNearbyBlockChange() : void{
-        parent::onNearbyBlockChange();
-
-        if($this->canGrow()){
-            $plantsTile = $this->pos->getWorld()->getTile($this->pos);
-            if($plantsTile instanceof Plants){
-                $plantsTile->setLastTime(microtime(true));
-            }
-            $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Plants::$updateDelay);
-        }
     }
 }

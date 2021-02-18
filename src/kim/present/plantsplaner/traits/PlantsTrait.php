@@ -26,13 +26,17 @@ trait PlantsTrait{
         $world = $this->pos->getWorld();
         $plantsTile = $world->getTile($this->pos);
         if(!$plantsTile instanceof Plants){
-            $plantsTile = new Plants($world, $this->pos);
-            $world->addTile($plantsTile);
+            if($this->canGrow()){
+                $plantsTile = new Plants($world, $this->pos);
+                $world->addTile($plantsTile);
+            }else{
+                return;
+            }
         }
 
         if($plantsTile->checkGrowth()){
-            $this->pos->getWorld()->scheduleDelayedBlockUpdate($this->pos, Plants::$updateDelay);
-        }elseif($this->getPlantsData()->isTemporary()){
+            Plants::schedulePlants($plantsTile, $this);
+        }else{
             $plantsTile->close();
         }
     }
@@ -44,6 +48,26 @@ trait PlantsTrait{
         if(!$plantsTile instanceof Plants){
             $this->pos->getWorld()->addTile(new Plants($this->pos->getWorld(), $this->pos));
         }
+    }
+
+    /**
+     * @override to register scheduling when near block changed
+     * @noinspection PhpUndefinedClassInspection
+     */
+    public function onNearbyBlockChange() : void{
+        /** @var Block|IPlants $this */
+        parent::onNearbyBlockChange();
+
+        if(!$this->canGrow())
+            return;
+
+        $world = $this->pos->getWorld();
+        $plantsTile = $world->getTile($this->getPos());
+        if(!$plantsTile instanceof Plants){
+            $plantsTile = new Plants($world, $this->pos);
+            $world->addTile($plantsTile);
+        }
+        Plants::schedulePlants($plantsTile, $this);
     }
 
     /** @override to not perform block random ticking */

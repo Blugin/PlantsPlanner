@@ -79,14 +79,12 @@ trait StackablePlantsTrait{
     }
 
     /**
-     * @override to register scheduling when near block changed.
+     * @override to register scheduling when near block changed
      * Since growth is handled at bottom, it searches for bottom and then adds that to the scheduling.
+     * @noinspection PhpUndefinedClassInspection
      */
     public function onNearbyBlockChange() : void{
-        /**
-         * @noinspection PhpUndefinedClassInspection
-         * @see Block::onNearbyBlockChange()
-         */
+        /** @var Block|IPlants $this */
         parent::onNearbyBlockChange();
 
         $floor = $this;
@@ -94,11 +92,16 @@ trait StackablePlantsTrait{
             $floor = $down;
         }
 
-        $world = $this->pos->getWorld();
-        $plantsTile = $world->getTile($floor->getPos());
-        if($plantsTile instanceof Plants){
-            $plantsTile->setLastTime(microtime(true));
+        if(!$floor->canGrow())
+            return;
+
+        $pos = $floor->getPos();
+        $world = $pos->getWorld();
+        $plantsTile = $world->getTile($pos);
+        if(!$plantsTile instanceof Plants){
+            $plantsTile = new Plants($world, $pos);
+            $world->addTile($plantsTile);
         }
-        $world->scheduleDelayedBlockUpdate($floor->getPos(), Plants::$updateDelay);
+        Plants::schedulePlants($plantsTile, $this);
     }
 }

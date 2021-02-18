@@ -34,7 +34,6 @@ final class Loader extends PluginBase{
         self::$instance = $this;
 
         //Register Plants tile
-        Plants::$updateDelay = max(1, (int) ($this->getConfig()->getNested("global.update-delay", 60) * 20));
         TileFactory::getInstance()->register(Plants::class, ["Plants", "plantsplanner:plants"]);
 
         //Resiter plants blocks

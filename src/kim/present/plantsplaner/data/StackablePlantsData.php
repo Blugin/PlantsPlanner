@@ -21,11 +21,6 @@ class StackablePlantsData extends PlantsData{
     }
 
     /** @inheritDoc */
-    public function isTemporary() : bool{
-        return false;
-    }
-
-    /** @inheritDoc */
     public static function fromArray(array $array) : PlantsData{
         return new StackablePlantsData(
             (float) ($array["grow-seconds"] ?? 60.0),

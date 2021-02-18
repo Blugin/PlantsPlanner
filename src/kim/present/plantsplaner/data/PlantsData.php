@@ -23,14 +23,6 @@ class PlantsData{
         return $this->growSeconds;
     }
 
-    /**
-     * Returns whether remove tile when after growth is over.
-     * If it returns true, the tile of the block that has finished growing is closed.
-     */
-    public function isTemporary() : bool{
-        return true;
-    }
-
     /** Returns a PlantsData generated as values in an array. */
     public static function fromArray(array $array) : PlantsData{
         return new PlantsData((float) ($array["grow-seconds"] ?? 60.0));
