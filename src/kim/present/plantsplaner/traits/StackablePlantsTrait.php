@@ -5,11 +5,8 @@ namespace kim\present\plantsplaner\traits;
 
 use kim\present\plantsplaner\block\IPlants;
 use kim\present\plantsplaner\data\StackablePlantsData;
-use kim\present\plantsplaner\tile\Plants;
 use pocketmine\block\Block;
-use pocketmine\block\BlockLegacyIds;
 use pocketmine\event\block\BlockGrowEvent;
-use pocketmine\math\Facing;
 
 /**
  * This trait provides a implementation for stackable `IPlants` to reduce boilerplate.
@@ -22,28 +19,29 @@ trait StackablePlantsTrait{
     /** @inheritDoc */
     public function growPlants() : void{
         /** @var Block|IPlants $this */
-        if($this->canGrow()){
-            $world = $this->pos->getWorld();
-            for($y = 1; $y < $this->getMaxGrowth(); ++$y){
-                $vec = $this->pos->add(0, $y, 0);
-                if(!$world->isInWorld($vec->x, $vec->y, $vec->z))
-                    break;
+        $world = $this->pos->getWorld();
 
-                $block = $world->getBlock($vec);
-                if($block->isSameType($this))
-                    continue;
+        //Check if above block is replaceable block and this plant is the top block
+        $up = $this->pos->add(0, 1, 0);
+        if(!$world->isInWorld($up->x, $up->y, $up->z))
+            return;
 
-                if($block->getId() === BlockLegacyIds::AIR){
-                    $ev = new BlockGrowEvent($block, clone $this);
-                    $ev->call();
-                    if(!$ev->isCancelled()){
-                        $pos = $block->getPos();
-                        $world = $pos->getWorld();
-                        $world->setBlock($pos, $ev->getNewState());
-                    }
-                    break;
-                }else{
-                    break;
+        $upBlock = $world->getBlock($up);
+        if(!$upBlock->canBeReplaced() || $upBlock->isSameType($this))
+            return;
+
+        //Check if this plant is shorter than the maximum length
+        $max = $this->getMaxGrowth();
+        for($i = 1; $i < $max; ++$i){
+            $vec = $this->pos->subtract(0, $i, 0);
+            if(!$world->isInWorld($vec->x, $vec->y, $vec->z))
+                return;
+
+            if(!$world->getBlock($vec)->isSameType($this)){
+                $ev = new BlockGrowEvent($upBlock, clone $this);
+                $ev->call();
+                if(!$ev->isCancelled()){
+                    $world->setBlock($up, $ev->getNewState());
                 }
             }
         }
@@ -51,23 +49,27 @@ trait StackablePlantsTrait{
 
     /** @inheritDoc */
     public function canGrow() : bool{
-        if($this->getSide(Facing::DOWN)->isSameType($this))
+        /** @var Block|IPlants $this */
+        $world = $this->pos->getWorld();
+
+        //Check if above block is replaceable block and this plant is the top block
+        $up = $this->pos->add(0, 1, 0);
+        if(!$world->isInWorld($up->x, $up->y, $up->z))
             return false;
 
-        $world = $this->pos->getWorld();
-        for($y = 1; $y < $this->getMaxGrowth(); ++$y){
-            $vec = $this->pos->add(0, $y, 0);
+        $upBlock = $world->getBlock($up);
+        if(!$upBlock->canBeReplaced() || $upBlock->isSameType($this))
+            return false;
+
+        //Check if this plant is shorter than the maximum length
+        $max = $this->getMaxGrowth();
+        for($i = 1; $i < $max; ++$i){
+            $vec = $this->pos->subtract(0, $i, 0);
             if(!$world->isInWorld($vec->x, $vec->y, $vec->z))
-                break;
-
-            $block = $world->getBlock($vec);
-            if($block->isSameType($this))
-                continue;
-
-            if($block->getId() === BlockLegacyIds::AIR){
-                return true;
-            }else{
                 return false;
+
+            if(!$world->getBlock($vec)->isSameType($this)){
+                return true;
             }
         }
         return false;
@@ -76,32 +78,5 @@ trait StackablePlantsTrait{
     /** @see StackablePlantsData::getMaxGrowth() */
     public function getMaxGrowth() : int{
         return $this->getPlantsData()->getMaxGrowth();
-    }
-
-    /**
-     * @override to register scheduling when near block changed
-     * Since growth is handled at bottom, it searches for bottom and then adds that to the scheduling.
-     * @noinspection PhpUndefinedClassInspection
-     */
-    public function onNearbyBlockChange() : void{
-        /** @var Block|IPlants $this */
-        parent::onNearbyBlockChange();
-
-        $floor = $this;
-        while(($down = $floor->getSide(Facing::DOWN))->isSameType($this)){
-            $floor = $down;
-        }
-
-        if(!$floor->canGrow())
-            return;
-
-        $pos = $floor->getPos();
-        $world = $pos->getWorld();
-        $plantsTile = $world->getTile($pos);
-        if(!$plantsTile instanceof Plants){
-            $plantsTile = new Plants($world, $pos);
-            $world->addTile($plantsTile);
-        }
-        Plants::schedulePlants($plantsTile, $this);
     }
 }
