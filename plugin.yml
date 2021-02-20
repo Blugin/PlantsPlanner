@@ -1,7 +1,7 @@
 ---
 name: PlantsPlanner
 main: kim\present\plantsplaner\Loader
-version: 0.1.0
+version: 1.0.0
 api: [ 4.0.0 ]
 author: PresentKim
 description: Manage plants with precise time planning!
