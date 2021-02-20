@@ -25,8 +25,7 @@ trait CropsPlantsTrait{
             $ev = new BlockGrowEvent($this, $block);
             $ev->call();
             if(!$ev->isCancelled()){
-                $world = $this->pos->getWorld();
-                $world->setBlock($this->pos, $ev->getNewState());
+                $this->pos->getWorld()->setBlock($this->pos, $ev->getNewState());
             }
         }
     }

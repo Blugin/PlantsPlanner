@@ -23,7 +23,6 @@ use pocketmine\event\block\BlockGrowEvent;
 use pocketmine\item\Bamboo as ItemBamboo;
 use pocketmine\item\Fertilizer;
 use pocketmine\item\Item;
-use pocketmine\math\Facing;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use pocketmine\world\BlockTransaction;
@@ -69,7 +68,7 @@ final class BambooSaplingPlants extends Flowable implements IPlants{
     }
 
     public function place(BlockTransaction $tx, Item $item, Block $blockReplace, Block $blockClicked, int $face, Vector3 $clickVector, ?Player $player = null) : bool{
-        return $this->canBeSupportedBy($blockReplace->getSide(Facing::DOWN))
+        return $this->canBeSupportedBy($blockReplace->pos->getWorld()->getBlock($blockReplace->pos->subtract(0, 1, 0)))
             && parent::place($tx, $item, $blockReplace, $blockClicked, $face, $clickVector, $player);
     }
 
@@ -84,7 +83,7 @@ final class BambooSaplingPlants extends Flowable implements IPlants{
     }
 
     public function onNearbyBlockChange() : void{
-        if(!$this->canBeSupportedBy($this->pos->getWorld()->getBlock($this->pos->down()))){
+        if(!$this->canBeSupportedBy($this->pos->getWorld()->getBlock($this->pos->subtract(0, 1, 0)))){
             $this->pos->getWorld()->useBreakOn($this->pos);
         }
     }
@@ -101,12 +100,12 @@ final class BambooSaplingPlants extends Flowable implements IPlants{
                 if(!$ev->isCancelled()){
                     $world->setBlock($this->pos, $ev->getNewState());
 
-                    $up = $this->getSide(Facing::UP);
+                    $upBlock = $world->getBlock($this->pos->add(0, 1, 0));
                     $bamboo = (clone $block)->setLeafSize(Bamboo::SMALL_LEAVES);
-                    $ev2 = new BlockGrowEvent($up, $bamboo);
+                    $ev2 = new BlockGrowEvent($upBlock, $bamboo);
                     $ev2->call();
                     if(!$ev2->isCancelled()){
-                        $world->setBlock($up->pos, $ev2->getNewState());
+                        $world->setBlock($upBlock->pos, $ev2->getNewState());
                     }
                 }
             }else{
@@ -127,7 +126,7 @@ final class BambooSaplingPlants extends Flowable implements IPlants{
             return true;
 
         $world = $this->pos->getWorld();
-        $up = $this->pos->getSide(Facing::UP);
+        $up = $this->pos->add(0, 1, 0);
         return $world->isInWorld($up->x, $up->y, $up->z) && $world->getBlock($up)->canBeReplaced();
     }
 

@@ -61,12 +61,13 @@ class Plants extends Tile{
         $this->timings->startTiming();
         $diffSeconds = microtime(true) - $this->lastTime;
         $growSeconds = $block->getGrowSeconds();
+        $world = $this->pos->getWorld();
         while($block->canGrow() && $diffSeconds > $growSeconds){
             $diffSeconds -= $growSeconds;
             $block->growPlants();
 
             //HACK: for prevents errors that occur if tiles are destroyed as plants grow
-            $block = $block->getSide(0, 0);
+            $block = $world->getBlock($block->getPos());
             if(!$block instanceof IPlants)
                 return false;
         }
