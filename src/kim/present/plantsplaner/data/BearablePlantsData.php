@@ -21,8 +21,8 @@ class BearablePlantsData extends PlantsData{
 
     public static function fromArray(array $array) : PlantsData{
         return new BearablePlantsData(
-            (float) ($array["grow-seconds"] ?? 30.0),
-            (float) ($array["bear-seconds"] ?? 300.0)
+            (float) ($array["grow-seconds"] ?? PHP_INT_MAX),
+            (float) ($array["bear-seconds"] ?? PHP_INT_MAX)
         );
     }
 }

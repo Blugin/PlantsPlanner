@@ -25,6 +25,6 @@ class PlantsData{
 
     /** Returns a PlantsData generated as values in an array. */
     public static function fromArray(array $array) : PlantsData{
-        return new PlantsData((float) ($array["grow-seconds"] ?? 60.0));
+        return new PlantsData((float) ($array["grow-seconds"] ?? PHP_INT_MAX));
     }
 }

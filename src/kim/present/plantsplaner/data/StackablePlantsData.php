@@ -23,8 +23,8 @@ class StackablePlantsData extends PlantsData{
     /** @inheritDoc */
     public static function fromArray(array $array) : PlantsData{
         return new StackablePlantsData(
-            (float) ($array["grow-seconds"] ?? 60.0),
-            (int) ($array["max-growth"] ?? 3)
+            (float) ($array["grow-seconds"] ?? PHP_INT_MAX),
+            (int) ($array["max-growth"] ?? 0)
         );
     }
 }
