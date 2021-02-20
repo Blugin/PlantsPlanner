@@ -31,8 +31,7 @@ final class SaplingPlants extends Sapling implements IPlants{
                 $ev = new BlockGrowEvent($this, $block);
                 $ev->call();
                 if(!$ev->isCancelled()){
-                    $pos = $this->getPos();
-                    $pos->getWorld()->setBlock($pos, $ev->getNewState());
+                    $this->pos->getWorld()->setBlock($this->pos, $ev->getNewState());
                 }
             }
         }

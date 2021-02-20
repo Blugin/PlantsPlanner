@@ -99,14 +99,14 @@ final class BambooSaplingPlants extends Flowable implements IPlants{
                 $ev = new BlockGrowEvent($this, $block);
                 $ev->call();
                 if(!$ev->isCancelled()){
-                    $world->setBlock($this->getPos(), $ev->getNewState());
+                    $world->setBlock($this->pos, $ev->getNewState());
 
                     $up = $this->getSide(Facing::UP);
                     $bamboo = (clone $block)->setLeafSize(Bamboo::SMALL_LEAVES);
                     $ev2 = new BlockGrowEvent($up, $bamboo);
                     $ev2->call();
                     if(!$ev2->isCancelled()){
-                        $world->setBlock($up->getPos(), $ev2->getNewState());
+                        $world->setBlock($up->pos, $ev2->getNewState());
                     }
                 }
             }else{
@@ -116,8 +116,7 @@ final class BambooSaplingPlants extends Flowable implements IPlants{
                 $ev = new BlockGrowEvent($this, $block);
                 $ev->call();
                 if(!$ev->isCancelled()){
-                    $pos = $this->getPos();
-                    $pos->getWorld()->setBlock($pos, $ev->getNewState());
+                    $this->pos->getWorld()->setBlock($this->pos, $ev->getNewState());
                 }
             }
         }

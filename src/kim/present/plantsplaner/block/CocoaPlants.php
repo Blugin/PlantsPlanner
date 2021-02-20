@@ -48,9 +48,8 @@ final class CocoaPlants extends CocoaBlock implements IPlants{
             $ev = new BlockGrowEvent($this, $block);
             $ev->call();
             if(!$ev->isCancelled()){
-                $pos = $this->getPos();
-                $world = $pos->getWorld();
-                $world->setBlock($pos, $ev->getNewState());
+                $world = $this->pos->getWorld();
+                $world->setBlock($this->pos, $ev->getNewState());
             }
         }
     }

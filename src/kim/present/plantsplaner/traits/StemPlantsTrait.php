@@ -30,9 +30,8 @@ trait StemPlantsTrait{
                 $ev = new BlockGrowEvent($this, $block);
                 $ev->call();
                 if(!$ev->isCancelled()){
-                    $pos = $this->getPos();
-                    $world = $pos->getWorld();
-                    $world->setBlock($pos, $ev->getNewState());
+                    $world = $this->pos->getWorld();
+                    $world->setBlock($this->pos, $ev->getNewState());
                 }
             }else{
                 $grow = $this->getPlant();
@@ -46,9 +45,8 @@ trait StemPlantsTrait{
                         $ev = new BlockGrowEvent($side, $grow);
                         $ev->call();
                         if(!$ev->isCancelled()){
-                            $pos = $side->getPos();
-                            $world = $pos->getWorld();
-                            $world->setBlock($pos, $ev->getNewState());
+                            $world = $side->pos->getWorld();
+                            $world->setBlock($side->pos, $ev->getNewState());
                         }
                         break;
                     }

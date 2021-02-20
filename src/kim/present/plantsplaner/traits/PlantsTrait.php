@@ -62,7 +62,7 @@ trait PlantsTrait{
             return;
 
         $world = $this->pos->getWorld();
-        $plantsTile = $world->getTile($this->getPos());
+        $plantsTile = $world->getTile($this->pos);
         if(!$plantsTile instanceof Plants){
             $plantsTile = new Plants($world, $this->pos);
             $world->addTile($plantsTile);
