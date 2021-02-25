@@ -34,7 +34,7 @@ cocoa:
   # Same as `wheat`, but only 3 level (default: 180.0)
   grow-seconds: 180.0
 
-mellon_stem:
+melon_stem:
   # Seconds it takes to grow stem [float: seconds] (default: 30.0)
   # It means grow to the next level. (not full-growth time)
   grow-seconds: 30.0
@@ -43,7 +43,7 @@ mellon_stem:
   bear-seconds: 300.0
 
 pumpkin_stem:
-  # Same as `mellon_stem`
+  # Same as `melon_stem`
   grow-seconds: 30.0
   bear-seconds: 300.0
 
