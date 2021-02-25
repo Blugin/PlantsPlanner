@@ -37,7 +37,6 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\world\World;
 
-use function max;
 use function microtime;
 
 /**
@@ -117,20 +116,5 @@ class Plants extends Tile{
 
     public function setLastTime(float $lastTime) : void{
         $this->lastTime = $lastTime;
-    }
-
-    public static function schedulePlants(Plants $tile, IPlants $block) : void{
-        if($tile->pos === null)
-            return;
-
-        $growSeconds = $block->getGrowSeconds();
-        if($growSeconds > 0xffffff) //If the growth seconds is too large, it will not grow.
-            return;
-
-        $diffSeconds = (microtime(true) - $tile->getLastTime());
-        if($diffSeconds > 0.1){ //If the difference from the last update time is too short, it is not calculated.
-            $growSeconds -= $diffSeconds;
-        }
-        $tile->pos->getWorld()->scheduleDelayedBlockUpdate($tile->pos, (int) max(1, $growSeconds * 20 + 1));
     }
 }

@@ -32,6 +32,9 @@ use kim\present\plantsplaner\block\IPlants;
 use kim\present\plantsplaner\tile\Plants;
 use pocketmine\block\Block;
 
+use function max;
+use function microtime;
+
 /**
  * This trait provides a implementation for `IPlants` to reduce boilerplate.
  *
@@ -59,7 +62,15 @@ trait PlantsTrait{
         }
 
         if($plantsTile->checkGrowth()){
-            Plants::schedulePlants($plantsTile, $this);
+            $growSeconds = $this->getGrowSeconds();
+            if($growSeconds > 0xffffff) //If the growth seconds is too large, it will not grow.
+                return;
+
+            $diffSeconds = (microtime(true) - $plantsTile->getLastTime());
+            if($diffSeconds > 0.1){ //If the difference from the last update time is too short, it is not calculated.
+                $growSeconds -= $diffSeconds;
+            }
+            $plantsTile->pos->getWorld()->scheduleDelayedBlockUpdate($plantsTile->pos, (int) max(1, $growSeconds * 20 + 1));
         }else{
             $plantsTile->close();
         }
