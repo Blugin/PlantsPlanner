@@ -57,10 +57,8 @@ class Plants extends Tile{
         $this->lastTime = microtime(true);
 
         $block = $this->getBlock();
-        if($block instanceof IPlants){
-            self::schedulePlants($this, $block);
-        }else{
-            Loader::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function() : void{ $this->close(); }), 1);
+        if(!$block instanceof IPlants){
+            Loader::getInstance()->getScheduler()->scheduleTask(new ClosureTask(function() : void{ $this->close(); }));
         }
     }
 
@@ -84,26 +82,33 @@ class Plants extends Tile{
             return false;
 
         $block = $this->getBlock();
-        if(!$block instanceof IPlants || !$block->canGrow())
+        if(!$block instanceof IPlants)
             return false;
 
         $this->timings->startTiming();
         $diffSeconds = microtime(true) - $this->lastTime;
         $growSeconds = $block->getGrowSeconds();
-        $world = $this->pos->getWorld();
-        while($block->canGrow() && $diffSeconds > $growSeconds){
-            $diffSeconds -= $growSeconds;
-            $block->growPlants();
 
-            //HACK: for prevents errors that occur if tiles are destroyed as plants grow
+        $world = $this->pos->getWorld();
+        $canGrow = true;
+        while($canGrow && $diffSeconds > $growSeconds){
+            $diffSeconds -= $growSeconds;
+            if(!($canGrow = $block->growPlants()))
+                break;
+
             $block = $world->getBlock($block->getPos());
-            if(!$block instanceof IPlants)
-                return false;
+            if($block instanceof IPlants){
+                $growSeconds = $block->getGrowSeconds();
+            }else{
+                //HACK: for prevents errors that occur if tiles are destroyed as plants grow
+                $canGrow = false;
+                break;
+            }
         }
         $this->lastTime = microtime(true) - $diffSeconds;
         $this->timings->stopTiming();
 
-        return $block->canGrow();
+        return $canGrow;
     }
 
     public function getLastTime() : float{
@@ -118,8 +123,14 @@ class Plants extends Tile{
         if($tile->pos === null)
             return;
 
-        $delay = ($block->getGrowSeconds() - (microtime(true) - $tile->getLastTime()));
+        $growSeconds = $block->getGrowSeconds();
+        if($growSeconds > 0xffffff) //If the growth seconds is too large, it will not grow.
+            return;
 
-        $tile->pos->getWorld()->scheduleDelayedBlockUpdate($tile->pos, (int) max(1, $delay * 20 + 1));
+        $diffSeconds = (microtime(true) - $tile->getLastTime());
+        if($diffSeconds > 0.1){ //If the difference from the last update time is too short, it is not calculated.
+            $growSeconds -= $diffSeconds;
+        }
+        $tile->pos->getWorld()->scheduleDelayedBlockUpdate($tile->pos, (int) max(1, $growSeconds * 20 + 1));
     }
 }

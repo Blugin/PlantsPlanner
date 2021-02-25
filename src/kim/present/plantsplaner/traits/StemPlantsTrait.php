@@ -22,6 +22,7 @@
  *
  * @noinspection PhpIllegalPsrClassPathInspection
  * @noinspection SpellCheckingInspection
+ * @noinspection DuplicatedCode
  */
 
 declare(strict_types=1);
@@ -32,6 +33,7 @@ use kim\present\plantsplaner\block\IPlants;
 use kim\present\plantsplaner\data\BearablePlantsData;
 use kim\present\plantsplaner\data\PlantsData;
 use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\Crops;
 use pocketmine\block\Stem;
 use pocketmine\event\block\BlockGrowEvent;
 use pocketmine\math\Facing;
@@ -44,40 +46,58 @@ use function shuffle;
  * @see Stem, IPlants
  */
 trait StemPlantsTrait{
-    use CropsPlantsTrait;
+    use PlantsTrait;
 
     /** @inheritDoc */
-    public function growPlants() : void{
+    public function growPlants() : bool{
         /** @var Stem|IPlants $this */
-        if($this->canGrow()){
-            if($this->age < 7){
-                $block = clone $this;
-                ++$block->age;
+        if($this->age < 7){
+            $block = clone $this;
+            ++$block->age;
 
-                $ev = new BlockGrowEvent($this, $block);
-                $ev->call();
-                if(!$ev->isCancelled()){
-                    $this->pos->getWorld()->setBlock($this->pos, $ev->getNewState());
-                }
-            }else{
-                $world = $this->pos->getWorld();
-                $grow = $this->getPlant();
+            $ev = new BlockGrowEvent($this, $block);
+            $ev->call();
+            if(!$ev->isCancelled()){
+                $newBlock = $ev->getNewState();
+                $this->pos->getWorld()->setBlock($this->pos, $newBlock);
+                return $newBlock instanceof Crops && $newBlock->age < 7;
+            }
+            return true;
+        }else{
+            $world = $this->pos->getWorld();
+            $stemPlant = $this->getPlant();
+            $place = null;
 
-                $facings = Facing::HORIZONTAL;
-                shuffle($facings);
-                foreach($facings as $face){
-                    $side = $this->getSide($face);
-                    $downId = $world->getBlock($side->pos->subtract(0, 1, 0))->getId();
-                    if($side->canBeReplaced() && ($downId === BlockLegacyIds::FARMLAND || $downId === BlockLegacyIds::GRASS || $downId === BlockLegacyIds::DIRT)){
-                        $ev = new BlockGrowEvent($side, $grow);
-                        $ev->call();
-                        if(!$ev->isCancelled()){
-                            $world->setBlock($side->pos, $ev->getNewState());
-                        }
-                        break;
-                    }
+            $facings = Facing::HORIZONTAL;
+            shuffle($facings);
+            foreach($facings as $face){
+                $side = $this->getSide($face);
+                if($side->isSameType($stemPlant))
+                    return false;
+
+                if(!$side->canBeReplaced())
+                    continue;
+
+                $downId = $world->getBlockAt($side->pos->x, $side->pos->y - 1, $side->pos->z)->getId();
+                if(
+                    $downId === BlockLegacyIds::FARMLAND ||
+                    $downId === BlockLegacyIds::GRASS ||
+                    $downId === BlockLegacyIds::DIRT
+                ){
+                    $place = $side;
                 }
             }
+
+            if($place !== null){
+                $ev = new BlockGrowEvent($place, $stemPlant);
+                $ev->call();
+                if(!$ev->isCancelled()){
+                    $world->setBlock($place->pos, $ev->getNewState());
+                }else{
+                    return true;
+                }
+            }
+            return false;
         }
     }
 
@@ -95,12 +115,19 @@ trait StemPlantsTrait{
                 if($side->isSameType($stemPlant))
                     return false;
 
-                $downId = $world->getBlock($side->pos->subtract(0, 1, 0))->getId();
-                if($side->canBeReplaced() && ($downId === BlockLegacyIds::FARMLAND || $downId === BlockLegacyIds::GRASS || $downId === BlockLegacyIds::DIRT)){
+                if(!$side->canBeReplaced())
+                    continue;
+
+                $downId = $world->getBlockAt($side->pos->x, $side->pos->y - 1, $side->pos->z)->getId();
+                if(
+                    $downId === BlockLegacyIds::FARMLAND ||
+                    $downId === BlockLegacyIds::GRASS ||
+                    $downId === BlockLegacyIds::DIRT
+                ){
                     $hasSpace = true;
-                    break;
                 }
             }
+
             return $hasSpace;
         }
     }

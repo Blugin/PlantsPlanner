@@ -22,6 +22,7 @@
  *
  * @noinspection PhpIllegalPsrClassPathInspection
  * @noinspection SpellCheckingInspection
+ * @noinspection DuplicatedCode
  */
 
 declare(strict_types=1);
@@ -41,18 +42,22 @@ trait CropsPlantsTrait{
     use PlantsTrait;
 
     /** @inheritDoc */
-    public function growPlants() : void{
+    public function growPlants() : bool{
         /** @var Crops|IPlants $this */
-        if($this->canGrow()){
+        if($this->age < 7){
             $block = clone $this;
             ++$block->age;
 
             $ev = new BlockGrowEvent($this, $block);
             $ev->call();
             if(!$ev->isCancelled()){
-                $this->pos->getWorld()->setBlock($this->pos, $ev->getNewState());
+                $newBlock = $ev->getNewState();
+                $this->pos->getWorld()->setBlock($this->pos, $newBlock);
+                return $newBlock instanceof Crops && $newBlock->age < 7;
             }
+            return true;
         }
+        return false;
     }
 
     /** @inheritDoc */

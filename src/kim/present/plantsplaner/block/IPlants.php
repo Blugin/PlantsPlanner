@@ -46,6 +46,9 @@ interface IPlants{
     /** Returns whether the block can grow */
     public function canGrow() : bool;
 
-    /** Proccess block growing */
-    public function growPlants() : void;
+    /**
+     * Proccess block growing
+     * Returns whether the block can grow more
+     */
+    public function growPlants() : bool;
 }

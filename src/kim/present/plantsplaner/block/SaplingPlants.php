@@ -44,22 +44,21 @@ final class SaplingPlants extends Sapling implements IPlants{
         return DefaultPlants::SAPLING();
     }
 
-    public function growPlants() : void{
-        if($this->canGrow()){
-            if($this->isReady()){
-                //HACK: Since the private property $treeType cannot be used, interact with bone meal.
-                $this->onInteract(VanillaItems::BONE_MEAL(), Facing::UP, new Vector3(0, 0, 0));
-            }else{
-                $block = clone $this;
-                $block->setReady(true);
+    public function growPlants() : bool{
+        if($this->isReady()){
+            //HACK: Since the private property $treeType cannot be used, interact with bone meal.
+            $this->onInteract(VanillaItems::BONE_MEAL(), Facing::UP, new Vector3(0, 0, 0));
+        }else{
+            $block = clone $this;
+            $block->setReady(true);
 
-                $ev = new BlockGrowEvent($this, $block);
-                $ev->call();
-                if(!$ev->isCancelled()){
-                    $this->pos->getWorld()->setBlock($this->pos, $ev->getNewState());
-                }
+            $ev = new BlockGrowEvent($this, $block);
+            $ev->call();
+            if(!$ev->isCancelled()){
+                $this->pos->getWorld()->setBlock($this->pos, $ev->getNewState());
             }
         }
+        return true;
     }
 
     public function canGrow() : bool{

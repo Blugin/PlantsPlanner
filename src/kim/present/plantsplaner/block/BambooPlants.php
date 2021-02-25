@@ -22,6 +22,7 @@
  *
  * @noinspection PhpIllegalPsrClassPathInspection
  * @noinspection SpellCheckingInspection
+ * @noinspection DuplicatedCode
  */
 
 declare(strict_types=1);
@@ -43,29 +44,28 @@ final class BambooPlants extends Bamboo implements IPlants{
         return DefaultPlants::BAMBOO();
     }
 
-    public function growPlants() : void{
+    public function growPlants() : bool{
         /** @var Block|IPlants $this */
         $world = $this->pos->getWorld();
 
         //Check if above block is replaceable block and this plant is the top block
-        $up = $this->pos->add(0, 1, 0);
-        if(!$world->isInWorld($up->x, $up->y, $up->z))
-            return;
+        $upY = $this->pos->y + 1;
+        if(!$world->isInWorld($this->pos->x, $upY, $this->pos->z))
+            return false;
 
-        $upBlock = clone $world->getBlock($up);
+        $upBlock = $world->getBlockAt($this->pos->x, $upY, $this->pos->z);
         if(!$upBlock->canBeReplaced() || $upBlock->isSameType($this))
-            return;
+            return false;
 
         /** @var Bamboo[] $newBlocks */
         $newBlocks = [clone $this];
         $max = $this->getMaxGrowth();
         for($i = 1; $i <= $max; ++$i){
-            $vec = $up->subtract(0, $i, 0);
-            if(!$world->isInWorld($vec->x, $vec->y, $vec->z))
+            if(!$world->isInWorld($this->pos->x, $upY - $i, $this->pos->z))
                 break;
 
-            $block = $world->getBlock($vec);
-            if($world->getBlock($vec)->isSameType($this)){
+            $block = $world->getBlockAt($this->pos->x, $upY - $i, $this->pos->z);
+            if($block->isSameType($this)){
                 $newBlocks[$i] = clone $block;
             }else{
                 break;
@@ -73,8 +73,8 @@ final class BambooPlants extends Bamboo implements IPlants{
         }
 
         //Check if this plant is shorter than the maximum length
-        if(isset($newBlocks[$max]))
-            return;
+        if(isset($newBlocks[$max + 1]))
+            return false;
 
         foreach($newBlocks as $newBlock){
             $newBlock->setLeafSize(self::NO_LEAVES); //Remove leaves all stems
@@ -101,9 +101,10 @@ final class BambooPlants extends Bamboo implements IPlants{
 
             $tx = new BlockTransaction($world);
             foreach($newBlocks as $i => $newBlock){
-                $tx->addBlock($up->subtract(0, $i, 0), $newBlock);
+                $tx->addBlockAt($this->pos->x, $upY - $i, $this->pos->z, $newBlock);
             }
             $tx->apply();
         }
+        return isset($newBlocks[$max]);
     }
 }

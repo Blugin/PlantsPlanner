@@ -114,36 +114,44 @@ final class BambooSaplingPlants extends Flowable implements IPlants{
         }
     }
 
-    public function growPlants() : void{
-        if($this->canGrow()){
-            if($this->isReady()){
-                $world = $this->pos->getWorld();
+    public function growPlants() : bool{
+        $world = $this->pos->getWorld();
+        if($this->isReady()){
+            //Check if above block is replaceable block and this plant is the top block
+            if(!$world->isInWorld($this->pos->x, $this->pos->y + 1, $this->pos->z))
+                return false;
 
-                /** @var BambooPlants $block */
-                $block = BlockFactory::getInstance()->get(BlockLegacyIds::BAMBOO, 0);
-                $ev = new BlockGrowEvent($this, $block);
-                $ev->call();
-                if(!$ev->isCancelled()){
-                    $world->setBlock($this->pos, $ev->getNewState());
+            $upBlock = clone $world->getBlockAt($this->pos->x, $this->pos->y + 1, $this->pos->z);
+            if(!$upBlock->canBeReplaced() || $upBlock->isSameType($this))
+                return false;
 
-                    $upBlock = $world->getBlock($this->pos->add(0, 1, 0));
-                    $bamboo = (clone $block)->setLeafSize(Bamboo::SMALL_LEAVES);
-                    $ev2 = new BlockGrowEvent($upBlock, $bamboo);
-                    $ev2->call();
-                    if(!$ev2->isCancelled()){
-                        $world->setBlock($upBlock->pos, $ev2->getNewState());
-                    }
-                }
-            }else{
-                $block = clone $this;
-                $block->setReady(true);
+            /** @var BambooPlants $block */
+            $block = BlockFactory::getInstance()->get(BlockLegacyIds::BAMBOO, 0);
+            $ev = new BlockGrowEvent($this, $block);
+            $ev->call();
+            if(!$ev->isCancelled()){
+                $world->setBlock($this->pos, $ev->getNewState());
 
-                $ev = new BlockGrowEvent($this, $block);
-                $ev->call();
-                if(!$ev->isCancelled()){
-                    $this->pos->getWorld()->setBlock($this->pos, $ev->getNewState());
+                $upBlock = $world->getBlockAt($this->pos->x, $this->pos->y + 1, $this->pos->z);
+                $bamboo = (clone $block)->setLeafSize(Bamboo::SMALL_LEAVES);
+                $ev2 = new BlockGrowEvent($upBlock, $bamboo);
+                $ev2->call();
+                if(!$ev2->isCancelled()){
+                    $world->setBlock($upBlock->pos, $ev2->getNewState());
+                    return false;
                 }
             }
+            return true;
+        }else{
+            $block = clone $this;
+            $block->setReady(true);
+
+            $ev = new BlockGrowEvent($this, $block);
+            $ev->call();
+            if(!$ev->isCancelled()){
+                $world->setBlock($this->pos, $ev->getNewState());
+            }
+            return true;
         }
     }
 

@@ -66,17 +66,22 @@ final class CocoaPlants extends CocoaBlock implements IPlants{
         return false;
     }
 
-    public function growPlants() : void{
-        if($this->canGrow()){
+    public function growPlants() : bool{
+        if($this->age < 2){
             $block = clone $this;
             ++$block->age;
 
             $ev = new BlockGrowEvent($this, $block);
             $ev->call();
             if(!$ev->isCancelled()){
-                $this->pos->getWorld()->setBlock($this->pos, $ev->getNewState());
+                /** @var CocoaPlants $newBlock */
+                $newBlock = $ev->getNewState();
+                $this->pos->getWorld()->setBlock($this->pos, $newBlock);
+                return $newBlock->age < 2;
             }
+            return true;
         }
+        return false;
     }
 
     public function canGrow() : bool{

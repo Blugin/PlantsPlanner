@@ -54,9 +54,8 @@ trait PlantsTrait{
             if($this->canGrow()){
                 $plantsTile = new Plants($world, $this->pos);
                 $world->addTile($plantsTile);
-            }else{
-                return;
             }
+            return;
         }
 
         if($plantsTile->checkGrowth()){
@@ -92,7 +91,6 @@ trait PlantsTrait{
             $plantsTile = new Plants($world, $this->pos);
             $world->addTile($plantsTile);
         }
-        Plants::schedulePlants($plantsTile, $this);
     }
 
     /** @override to not perform block random ticking */
