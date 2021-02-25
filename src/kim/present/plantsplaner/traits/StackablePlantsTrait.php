@@ -106,4 +106,25 @@ trait StackablePlantsTrait{
     public function getMaxGrowth() : int{
         return $this->getPlantsData()->getMaxGrowth();
     }
+
+    /**
+     * @see Block::getAffectedBlocks()
+     * @override to destroyed at once
+     */
+    public function getAffectedBlocks() : array{
+        /** @var Block|IPlants $this */
+        $blocks = [$this];
+
+        $world = $this->pos->getWorld();
+        $maxY = $world->getWorldHeight();
+        for($y = $this->pos->y + 1; $y <= $maxY; ++$y){
+            $block = $world->getBlockAt($this->pos->x, $y, $this->pos->z);
+            if($block->isSameType($this)){
+                $blocks[] = $block;
+            }else{
+                break;
+            }
+        }
+        return $blocks;
+    }
 }
