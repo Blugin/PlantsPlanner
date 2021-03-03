@@ -70,7 +70,7 @@ trait PlantsTrait{
             if($diffSeconds > 0.1){ //If the difference from the last update time is too short, it is not calculated.
                 $growSeconds -= $diffSeconds;
             }
-            $plantsTile->pos->getWorld()->scheduleDelayedBlockUpdate($plantsTile->pos, (int) max(1, $growSeconds * 20 + 1));
+            $plantsTile->getPos()->getWorld()->scheduleDelayedBlockUpdate($plantsTile->getPos(), (int) max(1, $growSeconds * 20 + 1));
         }else{
             $plantsTile->close();
         }
