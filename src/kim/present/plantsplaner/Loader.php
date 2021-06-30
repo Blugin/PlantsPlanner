@@ -63,23 +63,23 @@ final class Loader extends PluginBase{
 
         //Resiter plants blocks
         $factory = BlockFactory::getInstance();
-        $factory->register(new WheatPlants(new BlockIdentifier(BlockLegacyIds::WHEAT_BLOCK, 0, ItemIds::WHEAT_SEEDS, Plants::class), "Wheat Block"), true);
-        $factory->register(new PotatoPlants(new BlockIdentifier(BlockLegacyIds::POTATO_BLOCK, 0, ItemIds::POTATO, Plants::class), "Potato Block"), true);
-        $factory->register(new CarrotPlants(new BlockIdentifier(BlockLegacyIds::CARROT_BLOCK, 0, ItemIds::CARROT, Plants::class), "Carrot Block"), true);
-        $factory->register(new BeetrootPlants(new BlockIdentifier(BlockLegacyIds::BEETROOT_BLOCK, 0, ItemIds::BEETROOT, Plants::class), "Beetroot Block"), true);
+        $factory->register(new WheatPlants(new BlockIdentifier(BlockLegacyIds::WHEAT_BLOCK, 0, ItemIds::WHEAT_SEEDS, Plants::class), "Wheat Block", BlockBreakInfo::instant()), true);
+        $factory->register(new PotatoPlants(new BlockIdentifier(BlockLegacyIds::POTATO_BLOCK, 0, ItemIds::POTATO, Plants::class), "Potato Block", BlockBreakInfo::instant()), true);
+        $factory->register(new CarrotPlants(new BlockIdentifier(BlockLegacyIds::CARROT_BLOCK, 0, ItemIds::CARROT, Plants::class), "Carrot Block", BlockBreakInfo::instant()), true);
+        $factory->register(new BeetrootPlants(new BlockIdentifier(BlockLegacyIds::BEETROOT_BLOCK, 0, ItemIds::BEETROOT, Plants::class), "Beetroot Block", BlockBreakInfo::instant()), true);
 
-        $factory->register(new CocoaPlants(new BlockIdentifier(BlockLegacyIds::COCOA_BLOCK, 0, null, Plants::class), "Cocoa Beans"), true);
+        $factory->register(new CocoaPlants(new BlockIdentifier(BlockLegacyIds::COCOA_BLOCK, 0, null, Plants::class), "Cocoa Beans", new BlockBreakInfo(0.2, BlockToolType::AXE, 0, 15.0)), true);
         $factory->register(new BambooSaplingPlants(new BlockIdentifier(BlockLegacyIds::BAMBOO_SAPLING, 0, ItemIds::BAMBOO, Plants::class), "Bamboo Sapling", BlockBreakInfo::instant()), true);
 
-        $factory->register(new MelonStemPlants(new BlockIdentifier(BlockLegacyIds::MELON_STEM, 0, ItemIds::MELON_SEEDS, Plants::class), "Melon Stem"), true);
-        $factory->register(new PumpkinStemPlants(new BlockIdentifier(BlockLegacyIds::PUMPKIN_STEM, 0, ItemIds::PUMPKIN_SEEDS, Plants::class), "Pumpkin Stem"), true);
+        $factory->register(new MelonStemPlants(new BlockIdentifier(BlockLegacyIds::MELON_STEM, 0, ItemIds::MELON_SEEDS, Plants::class), "Melon Stem", BlockBreakInfo::instant()), true);
+        $factory->register(new PumpkinStemPlants(new BlockIdentifier(BlockLegacyIds::PUMPKIN_STEM, 0, ItemIds::PUMPKIN_SEEDS, Plants::class), "Pumpkin Stem", BlockBreakInfo::instant()), true);
 
-        $factory->register(new SugarcanePlants(new BlockIdentifier(BlockLegacyIds::SUGARCANE_BLOCK, 0, ItemIds::SUGARCANE, Plants::class), "Sugarcane"), true);
-        $factory->register(new CactusPlants(new BlockIdentifier(BlockLegacyIds::CACTUS, 0, ItemIds::CACTUS, Plants::class), "Cactus"), true);
+        $factory->register(new SugarcanePlants(new BlockIdentifier(BlockLegacyIds::SUGARCANE_BLOCK, 0, ItemIds::SUGARCANE, Plants::class), "Sugarcane", BlockBreakInfo::instant()), true);
+        $factory->register(new CactusPlants(new BlockIdentifier(BlockLegacyIds::CACTUS, 0, ItemIds::CACTUS, Plants::class), "Cactus", new BlockBreakInfo(0.4)), true);
         $factory->register(new BambooPlants(new BlockIdentifier(BlockLegacyIds::BAMBOO, 0, ItemIds::BAMBOO, Plants::class), "Bamboo", new BlockBreakInfo(2.0, BlockToolType::AXE)), true);
 
         foreach(TreeType::getAll() as $treeType){
-            $sapling = new SaplingPlants(new BlockIdentifier(BlockLegacyIds::SAPLING, $treeType->getMagicNumber()), $treeType->getDisplayName() . " Sapling", $treeType);
+            $sapling = new SaplingPlants(new BlockIdentifier(BlockLegacyIds::SAPLING, $treeType->getMagicNumber()), $treeType->getDisplayName() . " Sapling", BlockBreakInfo::instant(), $treeType);
             $factory->register(clone $sapling, true);
             $factory->register($sapling->setReady(true), true);
         }
