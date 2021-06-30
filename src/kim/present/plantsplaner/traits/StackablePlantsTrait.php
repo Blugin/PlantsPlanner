@@ -33,6 +33,7 @@ use kim\present\plantsplaner\block\IPlants;
 use kim\present\plantsplaner\data\StackablePlantsData;
 use pocketmine\block\Block;
 use pocketmine\event\block\BlockGrowEvent;
+use pocketmine\world\World;
 
 /**
  * This trait provides a implementation for stackable `IPlants` to reduce boilerplate.
@@ -116,8 +117,7 @@ trait StackablePlantsTrait{
         $blocks = [$this];
 
         $world = $this->pos->getWorld();
-        $maxY = $world->getWorldHeight();
-        for($y = $this->pos->y + 1; $y <= $maxY; ++$y){
+        for($y = $this->pos->y + 1; $y <= World::Y_MAX; ++$y){
             $block = $world->getBlockAt($this->pos->x, $y, $this->pos->z);
             if($block->isSameType($this)){
                 $blocks[] = $block;
